@@ -1,19 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_div_mod.c                                       :+:      :+:    :+:   */
+/*   ft_ultimate_div_mod.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/23 16:56:29 by hozhan            #+#    #+#             */
-/*   Updated: 2025/02/23 16:56:38 by hozhan           ###   ########.tr       */
+/*   Created: 2025/02/23 16:33:46 by hozhan            #+#    #+#             */
+/*   Updated: 2025/02/23 16:52:39 by hozhan           ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-
-void	ft_div_mod(int a, int b, int *div, int *mod)
+void	ft_ultimate_div_mod(int *a, int *b)
 {
-	*div = a / b;
-	*mod = a % b;
+	int	temp_a;
+	int	temp_b;
+
+	temp_a = *a / *b;
+	temp_b = *a % *b;
+	*a = temp_a;
+	*b = temp_b;
 }
