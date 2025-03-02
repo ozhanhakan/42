@@ -1,33 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strupcase.c                                     :+:      :+:    :+:   */
+/*   ft_strlowcase.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/02 20:44:38 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/02 21:10:00 by hozhan           ###   ########.fr       */
+/*   Created: 2025/03/02 21:17:37 by hozhan            #+#    #+#             */
+/*   Updated: 2025/03/02 21:20:08 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-char	*ft_strupcase(char *str)
-	{
-		int	i;
+char	*ft_strlowcase(char *str)
+{
+	int	i;
 
-		i = 0;
-		while (str[i])
-		{
-			if (str[i] >= 'a' && str[i] <= 'z')
-				str[i] = 'A' + str[i] - 'a';
-			i++;
-		}
-		return str;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= 'A' && str[i] <= 'Z')
+			str[i] = 'a' + str[i] - 'A';
+		i++;
 	}
+	return str;
+}
 /* 
 #include <stdio.h>
 
 int	main(void)
 {
-	char	temp[] ="aBcDeFgH";
-	printf("%s\n", ft_strupcase(temp));
+char	temp[] ="aBcDeFgH";
+printf("%s\n", ft_strlowcase(temp));
 } */
