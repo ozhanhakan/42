@@ -6,12 +6,30 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 15:37:37 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/05 17:08:22 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/05 17:31:12 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 char	*ft_strstr(char *dest, char *to_find)
 {
+	char	*to;
+	char	*de;
+	int	i;
+	int	j;
+
+	i = 0;
+	to = to_find;
+	while (dest[i])
+	{
+		j = 0;
+		while (to_find[j] == dest[i + j] && to_find[j])
+		{
+			if (!(dest[i] == to_find[j]))
+				break;
+			j++;
+		}
+		i++;
+	}
 	
 }
 
