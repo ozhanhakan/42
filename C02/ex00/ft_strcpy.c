@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hozhan <hozhan@student.42kocaeli.com.tr>   +#+  +:+       +#+        */
+/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 22:33:42 by hozhan            #+#    #+#             */
-/*   Updated: 2025/02/25 23:09:00 by hozhan           ###   ########.tr       */
+/*   Updated: 2025/02/27 12:56:50 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,3 +23,15 @@ char	*ft_strcpy(char *dest, char *src)
 	dest[i] = '\0';
 	return (dest);
 }
+/*
+#include <stdio.h>
+
+int	main()
+{
+	char dest[100];
+	char src[] = "Hello";
+	ft_strcpy(dest, src);
+	printf("%s\n", dest);
+	return 0;
+}
+*/

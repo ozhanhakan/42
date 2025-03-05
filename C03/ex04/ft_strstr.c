@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlowcase.c                                    :+:      :+:    :+:   */
+/*   ft_strstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/02 21:17:37 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/03 16:19:59 by hozhan           ###   ########.fr       */
+/*   Created: 2025/03/05 15:37:37 by hozhan            #+#    #+#             */
+/*   Updated: 2025/03/05 17:08:22 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-char	*ft_strlowcase(char *str)
+char	*ft_strstr(char *dest, char *to_find)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] >= 'A' && str[i] <= 'Z')
-			str[i] = 'a' + str[i] - 'A';
-		i++;
-	}
-	return (str);
+	
 }
-/* 
-#include <stdio.h>
 
-int	main(void)
+#include <stdio.h>
+#include <string.h>
+
+int	main()
 {
-char	temp[] ="aBcDeFgH";
-printf("%s\n", ft_strlowcase(temp));
-} */
+	char a[20]= "1234";
+	char b[]= "567890";
+	char a1[20]= "0123456789";
+	char b1[]= "345";
+	//printf("a:%s, b: %s, ft_strstr:%s\n",a, b, ft_strstr( a, b,4));
+	printf("a1:%s, b1: %s, strstr:%s\n",a1, b1, strstr(a1, b1));
+}

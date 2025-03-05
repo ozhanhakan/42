@@ -1,33 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlowcase.c                                    :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/02 21:17:37 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/03 16:19:59 by hozhan           ###   ########.fr       */
+/*   Created: 2025/03/05 09:14:11 by hozhan            #+#    #+#             */
+/*   Updated: 2025/03/05 14:55:26 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-char	*ft_strlowcase(char *str)
+int	ft_strncmp(char *s1, char *s2, unsigned int n)
 {
-	int	i;
+	unsigned int	i;
 
 	i = 0;
-	while (str[i])
-	{
-		if (str[i] >= 'A' && str[i] <= 'Z')
-			str[i] = 'a' + str[i] - 'A';
+	while (i < n && s1[i] == s2[i] && s1[i] && s2[i])
 		i++;
-	}
-	return (str);
+	if (i == n)
+		return (0);
+	return (s1[i] - s2[i]);
 }
 /* 
 #include <stdio.h>
+#include <string.h>
 
-int	main(void)
+int	main()
 {
-char	temp[] ="aBcDeFgH";
-printf("%s\n", ft_strlowcase(temp));
+	char a[]= "1";
+	char b[]= "1";
+	printf("a:%s, b: %s, ft_strncmp:%d\n",a, b, ft_strncmp( a, b, 3));
+
+	char a1[]= "1";
+	char b1[]= "1";
+	printf("a:%s, b: %s, strncmp:%d\n",a1, b1, strncmp(a1, b1, 3));
 } */

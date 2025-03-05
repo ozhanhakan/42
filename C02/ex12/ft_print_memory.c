@@ -6,15 +6,15 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 01:58:18 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/03 02:25:28 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/04 17:04:39 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 
-static void	print_address(unsigned long addr)
+void	print_address(unsigned long addr)
 {
-	char		base[] = "0123456789ABCDEF";
+	const char	base[] = "0123456789abcdef";
 	char		buf[16];
 	int			i;
 
@@ -28,10 +28,10 @@ static void	print_address(unsigned long addr)
 	write(1, buf, 16);
 }
 
-static void	print_hex(unsigned char *addr, unsigned int size,
+void	print_hex(unsigned char *addr, unsigned int size,
 						unsigned int offset)
 {
-	char			base[] = "0123456789ABCDEF";
+	char		base[] = "0123456789abcdef";
 	unsigned int	i;
 	unsigned char	c;
 
@@ -52,8 +52,7 @@ static void	print_hex(unsigned char *addr, unsigned int size,
 	}
 }
 
-static void	print_chars(unsigned char *addr, unsigned int size,
-						  unsigned int offset)
+void	print_chars(unsigned char *addr, unsigned int size, unsigned int offset)
 {
 	unsigned int	i;
 	char	c;
@@ -88,11 +87,10 @@ void	*ft_print_memory(void *addr, unsigned int size)
 	}
 	return (addr);
 }
-
+/* 
 int	main(void)
 {
 	char	str[] = "Burada normal bir metin ve bazi \n \t karakterler var ";
-	// char	str[] = "";
 	ft_print_memory(str, sizeof(str) - 1);
 	return (0);
-}
+} */

@@ -6,23 +6,23 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 20:44:38 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/02 21:10:00 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/04 11:35:09 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 char	*ft_strupcase(char *str)
-	{
-		int	i;
+{
+	int	i;
 
-		i = 0;
-		while (str[i])
-		{
-			if (str[i] >= 'a' && str[i] <= 'z')
-				str[i] = 'A' + str[i] - 'a';
-			i++;
-		}
-		return str;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= 'a' && str[i] <= 'z')
+			str[i] = 'A' + str[i] - 'a';
+		i++;
 	}
+	return (str);
+}
 /* 
 #include <stdio.h>
 
