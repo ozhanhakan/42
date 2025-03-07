@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:14:11 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/05 14:55:26 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/07 10:52:37 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@ int	ft_strncmp(char *s1, char *s2, unsigned int n)
 	unsigned int	i;
 
 	i = 0;
-	while (i < n && s1[i] == s2[i] && s1[i] && s2[i])
+	while (i < n && s1[i] == s2[i] && s1[i])
 		i++;
 	if (i == n)
 		return (0);
