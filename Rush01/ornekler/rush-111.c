@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 17:48:23 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/08 17:48:30 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/08 23:38:01 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
+//alındı
 int	ft_atoi(char *str)
 {
 	int	i;
@@ -83,36 +84,28 @@ void	ft_putnbr(int nb)
 		write_digits(nb);
 }
 
-int	check(int argc, char **argv)
-{
-	if (argc != 2)
-		return (1);
-	if (ft_strlen(argv[1]) != 31)
-		return (1);
-	return (0);
-}
-
 void	get_numbers(char *str, int *target)
 {
 	int	i;
 	int	j;
-
+	
 	i = 0;
 	j = 0;
 	while (str[i] != '\0')
 	{
 		if (str[i] >= '0' && str[i] <= '4')
-			target[j++] = ft_atoi(str + i);
+		target[j++] = ft_atoi(str + i);
 		i++;
 	}
 }
 
+//alındı check_row_col
 int	check_col_up(int board[4][4], int pos, int target[16])
 {
 	int	i;
 	int	max;
 	int	visible_towers;
-
+	
 	i = 0;
 	max = 0;
 	visible_towers = 0;
@@ -128,7 +121,7 @@ int	check_col_up(int board[4][4], int pos, int target[16])
 			i++;
 		}
 		if (target[pos % 4] != visible_towers)
-			return (1);
+		return (1);
 	}
 	return (0);
 }
@@ -138,7 +131,7 @@ int	check_row_right(int board[4][4], int pos, int target[16])
 	int	i;
 	int	max_size;
 	int	visible_towers;
-
+	
 	i = 4;
 	max_size = 0;
 	visible_towers = 0;
@@ -153,7 +146,7 @@ int	check_row_right(int board[4][4], int pos, int target[16])
 			}
 		}
 		if (target[12 + pos / 4] != visible_towers)
-			return (1);
+		return (1);
 	}
 	return (0);
 }
@@ -163,7 +156,7 @@ int	check_col_down(int board[4][4], int pos, int target[16])
 	int	i;
 	int	max;
 	int	visible_towers;
-
+	
 	i = 3;
 	max = 0;
 	visible_towers = 0;
@@ -179,7 +172,7 @@ int	check_col_down(int board[4][4], int pos, int target[16])
 			i--;
 		}
 		if (target[4 + pos % 4] != visible_towers)
-			return (1);
+		return (1);
 	}
 	return (0);
 }
@@ -189,7 +182,7 @@ int	check_row_left(int board[4][4], int pos, int target[16])
 	int	i;
 	int	max;
 	int	visible_towers;
-
+	
 	i = 0;
 	max = 0;
 	visible_towers = 0;
@@ -205,11 +198,20 @@ int	check_row_left(int board[4][4], int pos, int target[16])
 			i++;
 		}
 		if (target[8 + pos / 4] != visible_towers)
-			return (1);
+		return (1);
 	}
 	return (0);
 }
 
+//alındı solve-check-display
+int	check(int argc, char **argv)
+{
+	if (argc != 2)
+		return (1);
+	if (ft_strlen(argv[1]) != 31)
+		return (1);
+	return (0);
+}
 int	check_case(int board[4][4], int pos, int target[16])
 {
 	if (check_row_left(board, pos, target) == 1)
@@ -243,7 +245,7 @@ int	check_double(int board[4][4], int pos, int size)
 	}
 	return (0);
 }
-
+//alındı
 int	solve(int board[4][4], int target[16], int pos)
 {
 	int	size;
@@ -288,7 +290,7 @@ void	display_solution(int board[4][4])
 		i++;
 	}
 }
-
+//alındı
 int	main(int argc, char **argv)
 {
 	int	board[4][4];
