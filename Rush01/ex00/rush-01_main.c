@@ -6,15 +6,15 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 17:48:23 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/09 08:28:22 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/09 08:59:32 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 void	ft_putstr(char *str);
 void	get_numbers(char *str, int *target);
 void	display_solution(int board[4][4]);
-int	solve(int board[4][4], int target[16], int pos);
-int	check(int argc, char **argv);
+int		solve(int board[4][4], int target[16], int pos);
+int		check(int argc, char **argv);
 
 void	reset_board(int str[4][4], int size)
 {
@@ -37,7 +37,6 @@ int	main(int argc, char **argv)
 	int	board[4][4];
 	int	target[16];
 	int	i;
-	int	j;
 
 	i = 0;
 	reset_board(board, 4);
