@@ -1,17 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rush-01_solve_display.c                            :+:      :+:    :+:   */
+/*   solve_display.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 08:18:11 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/09 08:58:18 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/09 15:52:28 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_putchar(char c);
-void	ft_putnbr(int nb);
 int		ft_strlen(char *str);
 int		check_col_up(int board[4][4], int pos, int target[16]);
 int		check_col_down(int board[4][4], int pos, int target[16]);
@@ -84,24 +82,4 @@ int	solve(int board[4][4], int target[16], int pos)
 		size++;
 	}
 	return (0);
-}
-
-void	display_solution(int board[4][4])
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (i < 4)
-	{
-		j = 0;
-		while (j < 4)
-		{
-			ft_putnbr(board[i][j]);
-			ft_putchar(' ');
-			j++;
-		}
-		ft_putchar('\n');
-		i++;
-	}
 }
