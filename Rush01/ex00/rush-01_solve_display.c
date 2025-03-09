@@ -1,10 +1,22 @@
-int	ft_strlen(char *str);
-void	ft_putchar(char c);
-void	ft_putnbr(int nb);
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rush-01_solve_display.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/09 08:18:11 by hozhan            #+#    #+#             */
+/*   Updated: 2025/03/09 08:28:00 by hozhan           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 int	check_col_up(int board[4][4], int pos, int target[16]);
 int	check_col_down(int board[4][4], int pos, int target[16]);
 int	check_row_left(int board[4][4], int pos, int target[16]);
 int	check_row_right(int board[4][4], int pos, int target[16]);
+int	ft_strlen(char *str);
+void	ft_putchar(char c);
+void	ft_putnbr(int nb);
 
 int	check(int argc, char **argv)
 {
@@ -14,6 +26,7 @@ int	check(int argc, char **argv)
 		return (1);
 	return (0);
 }
+
 int	check_case(int board[4][4], int pos, int target[16])
 {
 	if (check_row_left(board, pos, target) == 1)
@@ -47,6 +60,7 @@ int	check_double(int board[4][4], int pos, int size)
 	}
 	return (0);
 }
+
 int	solve(int board[4][4], int target[16], int pos)
 {
 	int	size;
@@ -83,7 +97,7 @@ void	display_solution(int board[4][4])
 		j = 0;
 		while (j < 4)
 		{
-			ft_putnbr(board[i][j]);
+		ft_putnbr(board[i][j]);
 			ft_putchar(' ');
 			j++;
 		}

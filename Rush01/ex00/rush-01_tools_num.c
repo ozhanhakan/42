@@ -1,4 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rush-01_tools_num.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/09 08:19:20 by hozhan            #+#    #+#             */
+/*   Updated: 2025/03/09 08:21:46 by hozhan           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
+
 void	ft_putchar(char c);
 
 int	ft_atoi(char *str)
@@ -54,13 +67,13 @@ void	get_numbers(char *str, int *target)
 {
 	int	i;
 	int	j;
-	
+
 	i = 0;
 	j = 0;
 	while (str[i] != '\0')
 	{
 		if (str[i] >= '0' && str[i] <= '4')
-		target[j++] = ft_atoi(str + i);
+			target[j++] = ft_atoi(str + i);
 		i++;
 	}
 }

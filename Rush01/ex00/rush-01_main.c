@@ -6,21 +6,21 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 17:48:23 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/09 00:05:19 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/09 08:28:22 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	check(int argc, char **argv);
 void	ft_putstr(char *str);
 void	get_numbers(char *str, int *target);
-int	solve(int board[4][4], int target[16], int pos);
 void	display_solution(int board[4][4]);
+int	solve(int board[4][4], int target[16], int pos);
+int	check(int argc, char **argv);
 
 void	reset_board(int str[4][4], int size)
 {
 	int	i;
 	int	j;
-	
+
 	i = 0;
 	j = 0;
 	while (i < size)
