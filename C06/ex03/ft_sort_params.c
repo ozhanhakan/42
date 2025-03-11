@@ -1,52 +1,69 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_sort_params.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/11 21:29:31 by hozhan            #+#    #+#             */
+/*   Updated: 2025/03/11 21:37:17 by hozhan           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 
-void	ft_swap(char **s1, char **s2)
+void	ft_putstr(char *str)
 {
-	char	*a;
-
-	a = *s1;
-	*s1 = *s2;
-	*s2 = a;
+	while (*str)
+		write(1, str++, 1);
 }
 
-void	ft_putchar(char **args, int size, int o)
+int ft_strcmp(char *s1, char *s2)
 {
-	int	i;
-
-	while (o < size)
+	while (*s1 && *s2 && *s1 == *s2)
 	{
-		i = 0;
-		while (args[o][i])
-			i++;
-		write(1, args[o], i);
+		s1++;
+		s2++;
+	}
+	return (*s1 - *s2);
+}
+
+void sort_args(int argc, char *argv[])
+{
+	int i;
+	int swapped;
+	char *temp;
+
+	swapped = 1;
+	while (swapped)
+	{
+		swapped = 0;
+		i = 1;
+		while (i < argc - 1) {
+		if (ft_strcmp(argv[i], argv[i + 1]) > 0) {
+			temp = argv[i];
+			argv[i] = argv[i + 1];
+			argv[i + 1] = temp;
+			swapped = 1;
+		}
+		i++;
+		}
+	}
+}
+
+int main(int argc, char *argv[])
+{
+	int i;
+
+	i = 1;
+	if (argc > 1) 
+	{
+		sort_args(argc, argv);
+		while (i < argc) {
+		ft_putstr(argv[i]);
 		write(1, "\n", 1);
-		o++;
-	}
-}
-
-int	main(int size, char **args)
-{
-	int	i;
-	int	o;
-
-	o = 1;
-	if (size < 2)
-		return (0);
-	while (o < size - 1)
-	{
-		i = 0;
-		if (args[o][i] == args[o + 1][i])
-		{
-			while ((args[o][i] || args[o + 1][i])
-				&& (args[o][i] == args[o + 1][i]))
-				i++;
+		i++;
 		}
-		if (args[o][i] > args[o + 1][i])
-		{
-			ft_swap(&args[o], &args[o + 1]);
-			o = 0;
-		}
-		o++;
 	}
-	ft_putchar(args, size, 1);
+	return 0;
 }
