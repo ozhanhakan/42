@@ -1,1 +1,2 @@
-ip link show | awk '/link\/ether/ {print $2}'
+#!/bin/sh
+ifconfig | awk '/ether/ {print $2}'
