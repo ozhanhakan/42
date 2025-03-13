@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 00:02:44 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/12 00:04:11 by hozhan           ###   ########.fr       */
+/*   Created: 2025/03/12 12:05:49 by hozhan            #+#    #+#             */
+/*   Updated: 2025/03/12 17:38:37 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,14 @@ char	*ft_strdup(char *src)
 	char	*copy;
 	int		i;
 
-	copy = malloc(sizeof(char) * (strlen(src) + 1)); // Doğru bellek ayırma
-	if (copy == NULL)
-		return (NULL);
 	i = 0;
-	while (src[i] != '\0')
+	while (src[i])
+		i++;
+	copy = (char *)malloc(sizeof(char) * i + 1);
+	if (copy == 0)
+		return (0);
+	i = 0;
+	while (src[i])
 	{
 		copy[i] = src[i];
 		i++;
@@ -29,18 +32,17 @@ char	*ft_strdup(char *src)
 	copy[i] = '\0';
 	return (copy);
 }
-
-#include <string.h> // strlen için
+/*
 #include <stdio.h>
 
-int main()
+int	main(void)
 {
-	char *original = "Merhaba Dunya!";
-	char *copy = ft_strdup(original);
+	char	*original = "Mer";
+	char	*copy = ft_strdup(original);
 
 	printf("Original: %s\n", original);
 	printf("Copy: %s\n", copy);
-
-	free(copy); // Belleği serbest bırak
-	return 0;
+	free(copy);
+	return (0);
 }
+*/

@@ -5,58 +5,49 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 00:02:09 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/12 00:02:15 by hozhan           ###   ########.fr       */
+/*   Created: 2025/03/12 14:19:20 by hozhan            #+#    #+#             */
+/*   Updated: 2025/03/12 17:38:27 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include <stdlib.h>
 
-int *ft_range(int min, int max)
+int	*ft_range(int min, int max)
 {
-    int *range;
-    int i;
+	int	*range;
+	int	i;
 
-    if (min >= max)
-        return (NULL);
-
-    range = malloc(sizeof(int) * (max - min));
-    if (range == NULL)
-        return (NULL);
-
-    i = 0;
-    while (min < max)
-    {
-        range[i] = min;
-        min++;
-        i++;
-    }
-
-    return (range);
+	if (min >= max)
+		return (0);
+	range = (int *)malloc(sizeof(int) * (max - min));
+	if (range == 0)
+		return (0);
+	i = 0;
+	while (min < max)
+	{
+		range[i] = min;
+		min++;
+		i++;
+	}
+	return (range);
 }
-
+/* 
 #include <stdio.h>
 
-int main()
+int main(void)
 {
-    int min = 3;
-    int max = 7;
-    int *range = ft_range(min, max);
-
-    if (range == NULL)
-    {
-        printf("Geçersiz aralık!\n");
-        return (1);
-    }
-
-    printf("Oluşturulan dizi: ");
-    for (int i = 0; i < max - min; i++)
-    {
-        printf("%d ", range[i]);
-    }
-    printf("\n");
-
-    free(range); // Belleği serbest bırak
-    return 0;
-}
+	int *a = ft_range(1, 20);
+	if(!a)
+	{
+		printf("Gecersiz Aralik");
+		return (1);
+	}
+	int i=0;
+	while (i < 11)
+	{
+		printf("%d, ", a[i++]);
+	}
+	printf("\n");
+	free(a);
+	return (0);
+} */

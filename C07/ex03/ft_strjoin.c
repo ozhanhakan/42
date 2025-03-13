@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 00:27:21 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/12 00:46:09 by hozhan           ###   ########.fr       */
+/*   Created: 2025/03/12 16:51:24 by hozhan            #+#    #+#             */
+/*   Updated: 2025/03/13 08:39:09 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	copy_strings(char *dest, int size, char **strs, char *sep)
 {
 	int		i;
 	char	*current;
+	char	*sep_ptr;
 
 	current = dest;
 	i = 0;
@@ -51,8 +52,9 @@ void	copy_strings(char *dest, int size, char **strs, char *sep)
 			*current++ = *strs[i]++;
 		if (i < size - 1)
 		{
-			while (*sep)
-				*current++ = *sep++;
+			sep_ptr = sep;
+			while (*sep_ptr)
+				*current++ = *sep_ptr++;
 		}
 		i++;
 	}
@@ -78,19 +80,19 @@ char	*ft_strjoin(int size, char **strs, char *sep)
 	copy_strings(result, size, strs, sep);
 	return (result);
 }
-
+/* 
 
 #include <stdio.h>
 
 int main()
 {
-    char *strs[] = {"Merhaba", "42", "Okulları"};
-    char *sep = " ";
+    char *strs[] = {"Merhaba", "42", "Okulları", "Ogrencileri"};
+    char *sep = "*?*";
     char *result;
 
-    result = ft_strjoin(3, strs, sep);
+    result = ft_strjoin(4, strs, sep);
     printf("Birleştirilmiş String: %s\n", result);
 
     free(result); // Belleği serbest bırak
     return 0;
-}
+} */

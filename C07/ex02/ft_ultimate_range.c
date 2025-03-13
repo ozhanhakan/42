@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 00:21:50 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/12 00:22:44 by hozhan           ###   ########.fr       */
+/*   Created: 2025/03/12 16:55:41 by hozhan            #+#    #+#             */
+/*   Updated: 2025/03/12 17:53:47 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,30 @@
 **   - Eğer min >= max ise, range NULL olur ve 0 döner.
 */
 
-int ft_ultimate_range(int **range, int min, int max)
+int	ft_ultimate_range(int **range, int min, int max)
 {
-    int size;
-    int i;
+	int	size;
+	int	i;
 
-    if (min >= max)
-    {
-        *range = NULL;
-        return (0);
-    }
-    size = max - min;
-    *range = malloc(sizeof(int) * size);
-    if (*range == NULL)
-        return (-1);
-    i = 0;
-    while (min < max)
-    {
-        (*range)[i] = min;
-        min++;
-        i++;
-    }
-    return (size);
+	if (min >= max)
+	{
+		*range = 0;
+		return (0);
+	}
+	size = max - min;
+	*range = (int *)malloc(sizeof(int) * size);
+	if (*range == 0)
+		return (-1);
+	i = 0;
+	while (min < max)
+	{
+		(*range)[i] = min;
+		min++;
+		i++;
+	}
+	return (size);
 }
-
+/* 
 #include <stdio.h>
 
 int main()
@@ -67,7 +67,7 @@ int main()
         return (1);
     }
 
-    printf("Oluşturulan dizi: ");
+    printf("Oluşturulan dizi boyutu %d : dizi: ", size);
     for (int i = 0; i < size; i++)
     {
         printf("%d ", range[i]);
@@ -76,4 +76,4 @@ int main()
 
     free(range); // Belleği serbest bırak
     return 0;
-}
+} */
