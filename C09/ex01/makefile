@@ -26,7 +26,7 @@ $(NAME) : $(OBJS)
 clean:
 	rm -f $(OBJS)
 
-fclean:
+fclean: clean
 	rm -f $(NAME)
 
 # Yeniden derleme kuralı
