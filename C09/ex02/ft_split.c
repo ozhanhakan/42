@@ -6,47 +6,43 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 00:26:35 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/21 11:51:31 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/21 14:28:46 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-Açıklamalar
-* is_sep fonksiyonu, verilen karakterin charset içerisinde olup olmadığını,
-* count_words fonksiyonu, boş olmayan kelimelerin sayısını belirler.
-* word_dup fonksiyonu, belirlenen kelime aralığından dinamik olarak string ypr
-* ft_split fonksiyonu, verilen diziyi ayırarak her kelime için bellek ayırır 
-	ve son elemanı NULL olacak şekilde bir dizi döner.
-*/
+Çalışma Mantığı:
+is_sep: Karakterin ayraç olup olmadığını kontrol eder.
+count_words: Kelime sayısını hesaplar.
+fill_arr:
+	Kelimeleri bulur
+	Bellek ayırır
+	Karakterleri kopyalar
+	Hata durumunda free_mem çağırır
+free_mem: Hata durumunda önceki bellekleri temizler.*/
 
 #include <stdlib.h>
 
 int	is_sep(char c, char *charset)
 {
-	int	i;
-
-	i = 0;
-	while (charset[i])
-	{
-		if (c == charset[i])
+	while (*charset)
+		if (c == *charset++)
 			return (1);
-		i++;
-	}
 	return (0);
 }
 
 int	count_words(char *str, char *charset)
 {
-	int	i;
 	int	count;
+	int	i;
 
-	i = 0;
 	count = 0;
+	i = 0;
 	while (str[i])
 	{
 		if (!is_sep(str[i], charset))
 		{
-			if (str[i + 1] == '\0' || is_sep(str[i + 1], charset))
+			if (!str[i + 1] || is_sep(str[i + 1], charset))
 				count++;
 		}
 		i++;
@@ -54,73 +50,83 @@ int	count_words(char *str, char *charset)
 	return (count);
 }
 
-char	*word_dup(char *str, int start, int end)
+char	**free_mem(char **arr, int size)
 {
-	char	*word;
-	int		i;
+	while (size-- > 0)
+		free(arr[size]);
+	free(arr);
+	return (0);
+}
 
-	word = (char *)malloc(sizeof(char) * (end - start + 1));
-	if (!word)
-		return (0);
-	i = 0;
-	while (start < end)
+char	**fill_arr(char *s, char *set, char **arr, int wc)
+{
+	int	i;
+	int	len;
+
+	i = -1;
+	while (++i < wc)
 	{
-		word[i] = str[start];
-		i++;
-		start++;
+		while (*s && is_sep(*s, set))
+			s++;
+		len = 0;
+		while (s[len] && !is_sep(s[len], set))
+			len++;
+		arr[i] = (char *)malloc(len + 1);
+		if (!arr[i])
+			return (free_mem(arr, i));
+		len = -1;
+		while (++len, s[len] && !is_sep(s[len], set))
+			arr[i][len] = s[len];
+		arr[i][len] = 0;
+		s += len;
 	}
-	word[i] = '\0';
-	return (word);
+	arr[i] = 0;
+	return (arr);
 }
 
 char	**ft_split(char *str, char *charset)
 {
-	char	**split;
-	int		i;
-	int		j;
-	int		index;
+	char	**result;
+	int		word_count;
 
-	split = (char **)malloc(sizeof(char *) * (count_words(str, charset) + 1));
-	if (!split)
+	if (!str || !charset)
 		return (0);
-	i = 0;
-	index = 0;
-	while (str[i])
-	{
-		if (!is_sep(str[i], charset))
-		{
-			j = i;
-			while (str[j] && !is_sep(str[j], charset))
-				j++;
-			split[index++] = word_dup(str, i, j);
-			i = j;
-		}
-		else
-			i++;
-	}
-	split[index] = 0;
-	return (split);
+	word_count = count_words(str, charset);
+	result = (char **)malloc(sizeof(char *) * (word_count + 1));
+	if (!result)
+		return (0);
+	if (!fill_arr(str, charset, result, word_count))
+		return (0);
+	return (result);
 }
 /* 
-//Test fonksiyonu
 #include <stdio.h>
 
 int	main(void)
 {
-	char	*str = "Hello,world!This-is:a.test";
-	char	*charset = ",!-:.";
-	char	**result = ft_split(str, charset);
+	// Bölünecek orijinal string.
+	char	*str = "Merhaba, nasılsınız? Bugün hava çok güzel.";
+	// Ayraç karakterler: boşluk, virgül, soru işareti ve nokta.
+	char	*charset = " ,?.";
+	char	**result;  // ft_split fonksiyonundan dönecek kelimeler dizisi.
+	int		i;
 
-	if(result)
+	
+	result = ft_split(str, charset);
+	if (!result)  // Bellek hatası kontrolü.
 	{
-		for(int i=0; result[i];i++)
-		{
-			printf("%s\n", result[i]);
-			free(result[i]);//her ek string belleğini serbest bırak
-		}
-		free(result);
+		printf("Bellek hatası!\n");
+		return (1);
 	}
-	else
-		printf("Bellek Hatası");
+
+	// result dizisinde bulunan her kelimeyi ekrana yazdır.
+	i = 0;
+	while (result[i])
+	{
+		printf("Kelime %d: %s\n", i, result[i]);
+		free(result[i]);  // Her kelime için ayrılan belleği serbest bırak.
+		i++;
+	}
+	free(result);  // Kelimeleri saklayan ana diziyi serbest bırak.
 	return (0);
 } */
