@@ -6,10 +6,11 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 22:49:59 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/20 23:50:27 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/22 11:55:37 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
 #include "ft.h"
 
 int main(void) {
@@ -45,4 +46,4 @@ int main(void) {
 	ft_putchar('\n');
 
     return 0;
-}
+} */
