@@ -6,18 +6,17 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:13:53 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/23 18:55:06 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/24 00:01:53 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-#include <stdio.h>
 #include <string.h>
 #include <libgen.h>
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 10
 
 int	ft_strlen(const char *str)
 {
@@ -45,14 +44,7 @@ int	open_file(const char *filename)
 
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-	{
-		write(2, "Hata: ", 6);
-		write(2, filename, ft_strlen(filename));
-		write(2, " -> ", 4);
-		write(2, strerror(errno), ft_strlen(strerror(errno)));
-		write(2, "\n", 1);
 		return (-1);
-	}
 	return (fd);
 }
 
@@ -64,16 +56,9 @@ void	read_and_print(int fd)
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	while (bytes_read > 0)
 	{
-		if (write(1, buffer, bytes_read) == -1)
-		{
-			write(2, strerror(errno), ft_strlen(strerror(errno)));
-			write(2, "\n", 1);
-			break ;
-		}
+		write(1, buffer, bytes_read);
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 	}
-	if (bytes_read == -1)
-		print_error("read error");
 }
 
 int	main(int argc, char **argv)
@@ -86,6 +71,7 @@ int	main(int argc, char **argv)
 	if (argc < 2)
 	{
 		read_and_print(0);
+		close(0);
 		return (0);
 	}
 	i = 1;
