@@ -6,11 +6,11 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 00:40:10 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/24 15:21:48 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/24 17:33:14 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_tail.h"
+#include "../includes/ft_tail.h"
 
 static void	read_file_loop(int fd, char *temp, t_buffer *buf)
 {
@@ -89,6 +89,7 @@ int	main(int argc, char **argv)
 	if (bytes < 0)
 	{
 		ft_putstr_fd("ft_tail: invalid byte count\n", 2);
+		ft_putstr_fd("Usage: ./ft_tail -c <bytes> <file1> [file2 ...]\n", 2);
 		return (1);
 	}
 	i = 3;
