@@ -6,11 +6,11 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 00:40:10 by hozhan            #+#    #+#             */
-/*   Updated: 2025/03/24 17:33:14 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/03/25 12:35:24 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_tail.h"
+#include "ft_tail.h"
 
 static void	read_file_loop(int fd, char *temp, t_buffer *buf)
 {
@@ -34,19 +34,12 @@ static void	read_file_loop(int fd, char *temp, t_buffer *buf)
 
 static void	print_tail_buffer(t_buffer *buf)
 {
-	int	start;
-
-	if (buf->total < buf->bytes)
-		start = 0;
-	else
-		start = buf->total % buf->bytes;
-	if (buf->total < buf->bytes)
+	if (buf->total <= buf->bytes)
 		write(1, buf->cbuf, buf->total);
 	else
 	{
-		write(1, buf->cbuf + start, buf->bytes - start);
-		if (start > 0)
-			write(1, buf->cbuf, start);
+		write(1, buf->cbuf + buf->pos, buf->bytes - buf->pos);
+		write(1, buf->cbuf, buf->pos);
 	}
 }
 
