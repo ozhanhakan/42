@@ -1,31 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.h                                            :+:      :+:    :+:   */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/26 11:23:40 by hozhan            #+#    #+#             */
-/*   Updated: 2025/05/26 17:45:25 by hozhan           ###   ########.fr       */
+/*   Created: 2025/05/26 16:09:38 by hozhan            #+#    #+#             */
+/*   Updated: 2025/05/26 17:44:15 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFT_H
-# define LIBFT_H
-
-# include <unistd.h>
-# include <stdlib.h>
-
-typedef struct s_list
+int	ft_isalpha(int c)
 {
-	void			*content;
-	struct s_list	*next;
-}	t_list;
-
-int	ft_isalpha(int c);
-int	ft_isdigit(int c);
-int	ft_isalnum(int c);
-int	ft_isascii(int c);
-int	ft_isprint(int c);
-
-#endif
+	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
+}
