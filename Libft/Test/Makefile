@@ -5,19 +5,33 @@ CFLAGS = -Wall -Wextra -Werror
 INCLUDES = -I..
 LIBFT = ../libft.a
 
-# Kullanım: make test=ft_strlen_test
-ifndef test
-$(error "Kullanım: make test=<test_adi> (örnek: make test=ft_strlen_test)")
-endif
+# Tüm test dosyalarını otomatik bulma
+TEST_SRCS = $(wildcard *_test.c)
+TEST_TARGETS = $(TEST_SRCS:_test.c=)
 
-$(test): $(test).c $(LIBFT)
-	@echo "🔨 Derleniyor: $(test).c"
-	@$(CC) $(CFLAGS) $(INCLUDES) $(test).c $(LIBFT) -o $(test)
-	@echo "🚀 Çalıştırılıyor: ./$(test)"
-	@./$(test)
+# Varsayılan hedef (tüm testleri listeler)
+.PHONY: all
+all:
+	@echo "Kullanılabilir testler:"
+	@for target in $(TEST_TARGETS); do \
+		echo "- make $$target"; \
+	done
 
-clean:
-	@rm -f *_test
-	@echo "🧹 Temizlik yapıldı."
+# Dinamik hedef oluşturma (her test için)
+define TEST_TEMPLATE
+.PHONY: $(1)
+$(1): $(1)_test.c $(LIBFT)
+	@echo "🔨 Derleniyor: $$<"
+	@$(CC) $(CFLAGS) $(INCLUDES) $$< $(LIBFT) -o $$@
+	@echo "🚀 Çalıştırılıyor: ./$$@"
+	@./$$@
+endef
 
+# Her test dosyası için hedef oluştur
+$(foreach test,$(TEST_TARGETS),$(eval $(call TEST_TEMPLATE,$(test))))
+
+# Temizleme
 .PHONY: clean
+clean:
+	@rm -f $(TEST_TARGETS)
+	@echo "🧹 Çalıştırılabilir dosyalar silindi."

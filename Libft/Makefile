@@ -1,14 +1,13 @@
 NAME 	= libft.a
-
 CC 		= cc
 CFLAGS 	= -Wall -Wextra -Werror
-
-SRC_DIR	= .
-SRCS	= $(wildcard $(SRC_DIR)/*.c)
-OBJS	= $(SRCS:.c=.o)
-
 AR		= ar rcs
 RM		= rm -f
+
+SRC_DIR	= .
+REG_SRCS	= $(wildcard $(SRC_DIR)/*.c)
+OBJS	= $(SRCS:.c=.o)
+
 
 all: $(NAME)
 
