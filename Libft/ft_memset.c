@@ -1,23 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen_test.c                                   :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/31 08:49:04 by hozhan            #+#    #+#             */
-/*   Updated: 2025/05/31 08:49:36 by hozhan           ###   ########.fr       */
+/*   Created: 2025/05/31 08:33:00 by hozhan            #+#    #+#             */
+/*   Updated: 2025/05/31 08:33:01 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include "libft.h"
-
-int	main(void)
-{
-	printf("''        -> %ld\n", ft_strlen(""));
-	printf("'Hello'   -> %zu\n", ft_strlen("Hello"));
-	printf("'42'      -> %zu\n", ft_strlen("42"));
-	printf("'abcdef'  -> %zu\n", ft_strlen("abcdef"));
-	return (0);
-}
