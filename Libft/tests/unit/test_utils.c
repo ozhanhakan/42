@@ -1,22 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_utils.h                                       :+:      :+:    :+:   */
+/*   test_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/31 23:53:16 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/01 01:18:49 by hozhan           ###   ########.fr       */
+/*   Created: 2025/06/01 01:17:15 by hozhan            #+#    #+#             */
+/*   Updated: 2025/06/01 01:17:26 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TEST_UTILS_H
-# define TEST_UTILS_H
+#include "test_utils.h"
 
-# include <stdio.h>
-# include <stdlib.h>
+void	print_test_result(int success, const char *test_name)
+{
+	if (success)
+		printf("[\033[32mOK\033[0m] %s\n", test_name);
+	else
+	{
+		printf("[\033[31mFAIL\033[0m] %s\n", test_name);
+		exit(EXIT_FAILURE);
+	}
+}
 
-void	print_test_result(int success, const char *test_name);
-void	run_test(void (*test)(), const char *test_name);
-
-#endif
+void	run_test(void (*test)(), const char *test_name)
+{
+	printf("Running %-25s", test_name);
+	test();
+	printf("\033[32m✓\033[0m\n");
+}

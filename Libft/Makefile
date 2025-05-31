@@ -6,7 +6,7 @@
 #    By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 12:00:00 by hozhan            #+#    #+#              #
-#    Updated: 2025/06/01 00:58:01 by hozhan           ###   ########.fr        #
+#    Updated: 2025/06/01 01:24:39 by hozhan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,13 +42,13 @@ test: bonus
 		rm -f $$test_name; \
 	done
 
-# Spesifik fonksiyon testi
+# Test derleme kuralı
 test-%: bonus
 	@echo "$(YELLOW)Testing $*$(RESET)"
-	@$(CC) $(CFLAGS) -Isrc tests/unit/$*_test.c -Lsrc -lft -o tests/unit/$*_test
+	@$(CC) $(CFLAGS) -Isrc tests/unit/$*_test.c tests/unit/test_utils.c -Lsrc -lft -o tests/unit/$*_test
 	@cd tests/unit && ./$*_test || (rm -f $*_test && exit 1)
 	@rm -f tests/unit/$*_test
-
+	
 # Valgrind testleri
 valgrind: bonus
 	@echo "$(YELLOW)=== VALGRIND CHECK ===$(RESET)"
