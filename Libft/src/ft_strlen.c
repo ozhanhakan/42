@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 09:38:24 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/01 00:49:10 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/01 00:58:33 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 size_t	ft_strlen(const char *s)
 {
 	size_t	len;
-	
+
 	len = 0;
 	if (s == NULL)
 		return (0);
