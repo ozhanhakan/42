@@ -6,7 +6,7 @@
 #    By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 12:00:00 by hozhan            #+#    #+#              #
-#    Updated: 2025/05/31 23:22:53 by hozhan           ###   ########.fr        #
+#    Updated: 2025/06/02 15:16:37 by hozhan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,41 +16,43 @@ CFLAGS	= -Wall -Wextra -Werror
 AR		= ar rcs
 RM		= rm -f
 
-# Mandatory sources (bonus hariç)
+# Kaynak dosyalar
 SRCS = $(filter-out %_bonus.c,$(wildcard *.c))
 BONUS_SRCS = $(wildcard *_bonus.c)
 
-# Object files
+# Nesne dosyaları
 OBJS = $(SRCS:.c=.o)
 BONUS_OBJS = $(BONUS_SRCS:.c=.o)
 
-# Primary targets
+# Hedefler
 all: $(NAME)
 
-bonus: $(BONUS_OBJS)
-	@make OBJS="$(OBJS) $(BONUS_OBJS)" $(NAME)
+# bonus hedefi, bonuslu nesne dosyalarını da kullanarak libft.a'yı yeniden oluşturur.
+# Kök makefile'dan çağrıldığında, OBJS değişkenini geçerek tüm nesneleri derler.
+bonus: $(OBJS) $(BONUS_OBJS)
+	@$(AR) $(NAME) $(OBJS) $(BONUS_OBJS)
 	@echo "\033[32m✓ Bonus functions added to $(NAME)\033[0m"
 
-# Library creation (no relinking)
+# Kütüphane oluşturma
 $(NAME): $(OBJS)
 	@$(AR) $@ $^
 	@echo "\033[32m✓ $@ created\033[0m"
 
-# Compilation rule (Norm compliant)
+# Derleme kuralı (Norm uyumlu)
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "\033[33mCompiling $<\033[0m"
 
-# Clean rules
+# Temizlik kuralları
 clean:
 	@$(RM) $(OBJS) $(BONUS_OBJS)
-	@echo "\033[33mObject files removed\033[0m"
+	@echo "\033[33mObject files removed$(RESET)"
 
 fclean: clean
 	@$(RM) $(NAME)
-	@echo "\033[33m$(NAME) removed\033[0m"
+	@echo "\033[33m$(NAME) removed$(RESET)"
 
 re: fclean all
 
-# Phony declarations
+# Phony bildirimleri
 .PHONY: all bonus clean fclean re
