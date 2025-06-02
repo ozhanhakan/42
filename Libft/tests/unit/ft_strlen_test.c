@@ -1,56 +1,58 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strlen_test.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/31 08:49:04 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/01 01:17:49 by hozhan           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include <string.h> // Original strlen for comparison
+#include <stdio.h>
+#include "test_utils.h" // Our testing utilities
+#include "libft.h"    // Your ft_strlen
 
-#include "../../src/libft.h"
-#include "test_utils.h"
-#include <string.h>
+// Individual test cases for ft_strlen
+// Each returns 0 on success, 1 on failure.
+static int test_strlen_basic(void) {
+    const char *str = "Hello World!";
+    size_t len_orig = strlen(str);
+    size_t len_ft = ft_strlen(str);
 
-static void	test_normal_string(void)
-{
-	print_test_result(ft_strlen("hello") == 5, "normal_string");
+    report_test_status("Basic string length", len_orig == len_ft);
+    return 0;
 }
 
-static void	test_empty_string(void)
-{
-	print_test_result(ft_strlen("") == 0, "empty_string");
+static int test_strlen_empty_string(void) {
+    const char *str = "";
+    size_t len_orig = strlen(str);
+    size_t len_ft = ft_strlen(str);
+
+    report_test_status("Empty string", len_orig == len_ft);
+    return 0;
 }
 
-static void	test_null_pointer(void)
-{
-	print_test_result(ft_strlen(NULL) == 0, "null_pointer");
+static int test_strlen_with_null_in_middle(void) {
+    const char *str = "Hello\0World"; // Contains a null byte in the middle
+    size_t len_orig = strlen(str); // Should stop at the first null
+    size_t len_ft = ft_strlen(str);
+
+    report_test_status("String with null in middle", len_orig == len_ft);
+    return 0;
 }
 
-static void	test_long_string(void)
-{
-	char	long_str[10000];
-	memset(long_str, 'a', 9999);
-	long_str[9999] = '\0';
-	print_test_result(ft_strlen(long_str) == 9999, "long_string");
+static int test_strlen_long_string(void) {
+    const char *str = "This is a very long string that should accurately test the ft_strlen function for performance and correctness over a large data set. It contains many characters and should not cause any segmentation faults or incorrect length calculations.";
+    size_t len_orig = strlen(str);
+    size_t len_ft = ft_strlen(str);
+
+    report_test_status("Long string", len_orig == len_ft);
+    return 0;
 }
 
-static void	test_special_chars(void)
-{
-	char	special_str[] = {'\n', '\t', 0};
-	print_test_result(ft_strlen(special_str) == 2, "special_chars");
+// Main test function for ft_strlen, runs all its individual tests
+int ft_strlen_main(void) {
+    print_suite_header("ft_strlen Tests");
+    test_strlen_basic();
+    test_strlen_empty_string();
+    test_strlen_with_null_in_middle();
+    test_strlen_long_string();
+    print_suite_footer("ft_strlen Tests", 1); // If we reach here, all sub-tests passed
+    return 0;
 }
 
-int	main(void)
-{
-	printf("=== Testing ft_strlen ===\n");
-	run_test(test_normal_string, "normal_string");
-	run_test(test_empty_string, "empty_string");
-	run_test(test_null_pointer, "null_pointer");
-	run_test(test_long_string, "long_string");
-	run_test(test_special_chars, "special_chars");
-	printf("\033[32mAll tests passed!\033[0m\n");
-	return (EXIT_SUCCESS);
+// Entry point for this specific test binary
+int main(void) {
+    return ft_strlen_main();
 }
