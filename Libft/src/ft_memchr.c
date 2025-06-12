@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 16:40:27 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/12 17:08:34 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/12 17:52:18 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	while (n--)
 	{
 		if (*ptr == (unsigned char)c)
-			return (void *)ptr;
+			return ((void *)ptr);
 		ptr++;
 	}
 	return (NULL);
