@@ -1,0 +1,61 @@
+do u understand the common functions or u need help with any of them?
+what is the difference between i++ and ++i ?
+-------------------------------------------------------------------------
+
+what is argc, argv?
+what is the expected value for argc in our case?
+what index of argv will hold the visibility rules for our program?
+what is the value of argv[0]?
+what is the length of argv[1] in our case and why?
+what function (name) we used to check our argument(s)?
+
+--------------------------------------------------------------------------
+
+how did we convert the string received in argv into an array?
+how many elements are there in this array?
+what do these elements represent?
+why are we using ft_atoi?
+
+---------------------------------------------------------------------------
+
+what does check_double function do?
+why we have 2 while loops inside it?
+what does the size variable in this function represent?
+why are we using this condition (board[i][pos % 4]?
+what is the desired return value for this function?
+
+----------------------------------------------------------------------------
+
+can u explain the inputs and outputs for check_case?
+	int check_case(int board[4][4], int pos, int target[16])
+what does this function do?
+
+-----------------------------------------------------------------------------
+
+what does check_col_down function do?
+what is visible_towers variable?
+how do we calculate it?
+can u explain this condition if (target[4 + pos % 4] != visible_towers) ?
+
+how do we change check_col_down into check_row_right?
+
+------------------------------------------------------------------------------
+
+what does pos / 4 represent?
+what does pos % 4 represent?
+
+------------------------------------------------------------------------------
+
+what cases will print "Error\n"?
+what does display_solution function do?
+can u explain its flow?
+
+------------------------------------------------------------------------------
+
+how does solve() work?
+point to the point we are using backtracking ...
+
+-------------------------------------------------------------------------------
+:: ADVANCED ::
+do we have a memory leak?
+how did we test this?
