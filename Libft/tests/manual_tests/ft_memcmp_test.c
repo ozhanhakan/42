@@ -48,6 +48,7 @@ int main(void)
     test_memcmp("Merhaba", "Merhaya", 7, "Farklı string'ler", 0);
     test_memcmp("Mer\0aba", "Mer\0aya", 7, "Null karakter karşılaştırması", 1);
     test_memcmp("Merhaba", "Merhaba", 0, "Sıfır bayt", 0);
+    test_memcmp("Merhaba", "Merhaba", 9, "size +1", 0);
 
     printf("Testler Tamamlandı!\n");
     return 0;
