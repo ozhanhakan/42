@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 16:53:57 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/13 18:18:46 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/13 18:23:07 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 		*(dst + dst_len + i) = *src++;
 		i++;
 	}
+	dst++;
 	*dst = '\0';
 	return (dst_len + src_len);
 }
