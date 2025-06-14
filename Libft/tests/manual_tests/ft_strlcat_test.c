@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include <string.h>
+#include <bsd/string.h>
+//#include <string.h>
 #include "../../src/libft.h"
 
 
@@ -30,7 +31,7 @@ int main(void)
 	char buff1[0xF00] = "there is no stars in the sky";
 	char buff2[0xF00] = "there is no stars in the sky";
 	size_t max = strlen(str) + 4;
-	size_t r1 = ft_strlcat(buff1, str, max);
+	size_t r1 = strlcat(buff1, str, max);
 	size_t r2 = ft_strlcat(buff2, str, max);
 	printf("Test 1: max = %zu\n", max);
 	printf("strlcat dönüş: %zu\n", r1);
@@ -41,7 +42,7 @@ int main(void)
 	// Test 2
 	char s1[4] = "";
 	char s2[4] = "";
-	r1 = ft_strlcat(s1, "thx to ntoniolo for this test !", 4);
+	r1 = strlcat(s1, "thx to ntoniolo for this test !", 4);
 	r2 = ft_strlcat(s2, "thx to ntoniolo for this test !", 4);
 	printf("Test 2:\n");
 	printf("strlcat dönüş: %zu\n", r1);
