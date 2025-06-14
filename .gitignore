@@ -1,6 +1,6 @@
 .vscode/
-.swp
-.out
-.a
+*.swp
+*.out
+*.a
 Test2/
 Libft/tests/manual_tests/a.out
