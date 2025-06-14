@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
+/*   By: ubuntuhakan <ubuntuhakan@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 16:53:57 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/13 18:23:07 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/14 09:39:36 by ubuntuhakan      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,11 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	if (size <= dst_len)
 		return (src_len + size);
 	i = 0;
-	while(i < size - 1 - dst_len)
+	while (src && i < size - 1 - dst_len)
 	{
-		*(dst + dst_len + i) = *src++;
+		dst[dst_len + i] = src[i];
 		i++;
 	}
-	dst++;
-	*dst = '\0';
+	dst[dst_len + i] = '\0';
 	return (dst_len + src_len);
 }
