@@ -77,6 +77,7 @@ $(TEST_EXES): %: %.o
 clean:
 	@echo "--- Test object dosyaları temizleniyor (*.o)... ---"
 	$(RM) $(TEST_OBJS)
+	make -C $(LIBFT_SRC_DIR) clean
 
 # fclean kuralı: Tüm object dosyalarını (*.o) VE tüm test çalıştırılabilirlerini siler.
 fclean: clean
