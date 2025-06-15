@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntuhakan <ubuntuhakan@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/14 19:12:14 by ubuntuhakan       #+#    #+#             */
-/*   Updated: 2025/06/14 19:20:51 by ubuntuhakan      ###   ########.fr       */
+/*   Created: 2025/06/14 19:12:14 by hozhan            #+#    #+#             */
+/*   Updated: 2025/06/15 22:21:51 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

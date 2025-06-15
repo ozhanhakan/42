@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntuhakan <ubuntuhakan@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 16:53:57 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/14 09:39:36 by ubuntuhakan      ###   ########.fr       */
+/*   Updated: 2025/06/15 22:21:16 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

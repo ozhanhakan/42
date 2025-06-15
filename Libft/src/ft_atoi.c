@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntuhakan <ubuntuhakan@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/15 19:39:01 by ubuntuhakan       #+#    #+#             */
-/*   Updated: 2025/06/15 22:16:10 by ubuntuhakan      ###   ########.fr       */
+/*   Created: 2025/06/15 19:39:01 by hozhan            #+#    #+#             */
+/*   Updated: 2025/06/15 22:20:23 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

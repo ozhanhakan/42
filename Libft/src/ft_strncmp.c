@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntuhakan <ubuntuhakan@student.42.fr>    +#+  +:+       +#+        */
+/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/15 13:01:39 by ubuntuhakan       #+#    #+#             */
-/*   Updated: 2025/06/15 15:24:46 by ubuntuhakan      ###   ########.fr       */
+/*   Created: 2025/06/15 13:01:39 by hozhan            #+#    #+#             */
+/*   Updated: 2025/06/15 22:21:27 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
