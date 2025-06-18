@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 22:00:38 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/18 10:06:50 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/18 12:31:34 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,31 +41,27 @@ static void	ft_free_all(char **arr, size_t count)
 	free(arr);
 }
 
-static int	ft_fill_words(char const *s, char c, char **result, size_t wc)
+static int	ft_fill_words(char const *s, char c, char **res, size_t wc)
 {
 	size_t	i;
 	size_t	start;
 	size_t	end;
 
-	i = 0;
+	i = -1;
 	start = 0;
-	while (i < wc)
+	while (++i < wc)
 	{
-		while (s[start] == c)
+		while (s[start] && s[start] == c)
 			start++;
 		end = start;
 		while (s[end] && s[end] != c)
 			end++;
-		result[i] = ft_substr(s, start, end - start);
-		if (!result[i])
-		{
-			ft_free_all(result, i);
-			return (1);
-		}
+		res[i] = ft_substr(s, start, end - start);
+		if (!res[i])
+			return (ft_free_all(res, i), 1);
 		start = end;
-		i++;
 	}
-	result[i] = NULL;
+	res[i] = NULL;
 	return (0);
 }
 
