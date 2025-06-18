@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 22:00:38 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/17 20:44:09 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/18 09:33:22 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ static size_t	ft_count_words(char const *s, char c)
 
 	words = 0;
 	i = 0;
-	while (s[i] && s[i] == c)
-		i++;
 	while (s[i])
 	{
-		words++;
+		if (s[i] != c)
+		{
+			words++;
+			i++;
+		}
 		while (s[i] && s[i] != c)
 			i++;
 		while (s[i] && s[i] == c)
