@@ -1,2 +1,6 @@
 LOG: Program basladi.
 LOG: Islem tamamlandi.
+LOG: 2.Program basladi.
+LOG: 2.Islem tamamlandi.
+LOG: 2.Program basladi.
+LOG: 2.Islem tamamlandi.

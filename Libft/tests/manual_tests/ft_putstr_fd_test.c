@@ -52,20 +52,23 @@ void test_putstr_fd_file(char *s, const char *filename, const char *description,
 // --- Ana Fonksiyon ---
 int main(void)
 {
+	const char *log_dir;
     printf("--- ft_putstr_fd Testleri ---\n\n");
 
     // Konsol çıktı testleri
-    test_putstr_fd_console("Hello World!", STDOUT_FILENO, "Standart Ciktiya String Yazma", 1);
-    test_putstr_fd_console("Bu bir hata mesajidir.\n", STDERR_FILENO, "Standart Hataya String Yazma", 2);
+    test_putstr_fd_console("2. Hello World!", STDOUT_FILENO, "Standart Ciktiya String Yazma", 1);
+    test_putstr_fd_console("2. Bu bir hata mesajidir.\n", STDERR_FILENO, "Standart Hataya String Yazma", 2);
     test_putstr_fd_console("", STDOUT_FILENO, "Bos String Yazma", 3);
     test_putstr_fd_console("Tek Satir\nIkinci Satir", STDOUT_FILENO, "Cok Satirli String Yazma", 4);
 
     // Dosyaya çıktı testleri (gözlemlenebilir)
-    test_putstr_fd_file("LOG: Program basladi.\n", "app_log.txt", "Dosyaya Log Mesaji Ekleme", 5);
-    test_putstr_fd_file("LOG: Islem tamamlandi.\n", "app_log.txt", "Dosyaya Devam Log Mesaji Ekleme", 6);
-    test_putstr_fd_file("KISA ", "kisa_log.txt", "Kisa string ekleme (1)", 7);
-    test_putstr_fd_file("LOG", "kisa_log.txt", "Kisa string ekleme (2)", 8);
-    test_putstr_fd_file(NULL, "app_log.txt", "NULL stringi yazma (hicbir sey yapmamali)", 9); // NULL kontrolü
+	log_dir = "txtfiles/app_log.txt";
+    test_putstr_fd_file("LOG: 2.Program basladi.\n",log_dir, "Dosyaya Log Mesaji Ekleme", 5);
+    test_putstr_fd_file("LOG: 2.Islem tamamlandi.\n", log_dir, "Dosyaya Devam Log Mesaji Ekleme", 6);
+    test_putstr_fd_file(NULL, log_dir, "NULL stringi yazma (hicbir sey yapmamali)", 9); // NULL kontrolü
+	log_dir = "txtfiles/kisa_log.txt";
+    test_putstr_fd_file("2. KISA ", log_dir, "Kisa string ekleme (1)", 7);
+    test_putstr_fd_file("2. LOG", log_dir, "Kisa string ekleme (2)", 8);
 
     return 0;
 }
