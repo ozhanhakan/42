@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-//#include "../../src/libft.h"
+#include "../../src/libft.h"
 
 #include <stddef.h>
 

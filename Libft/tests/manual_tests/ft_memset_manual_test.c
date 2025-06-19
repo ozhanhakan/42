@@ -3,7 +3,7 @@
 #include <stdlib.h> // For EXIT_SUCCESS, EXIT_FAILURE
 
 // Your ft_memset function prototype (usually in libft.h)
-#include "libft.h" 
+#include "../../src/libft.h" 
 
 // Color definitions (optional, for pretty output)
 #define GREEN   "\033[32m"

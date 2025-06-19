@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-
-// Senin ft_memcmp kodun
+#include "../../src/libft.h"
+/* // Senin ft_memcmp kodun
 int ft_memcmp(const void *s1, const void *s2, size_t n)
 {
     const unsigned char *ptr1;
@@ -20,7 +20,7 @@ int ft_memcmp(const void *s1, const void *s2, size_t n)
         n--;
     }
     return (0);
-}
+} */
  
 // Test fonksiyonu
 void test_memcmp(const char *s1, const char *s2, size_t n, const char *test_name, int is_null_test)

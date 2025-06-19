@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+#include "../../src/libft.h"
 
 // ft_memchr fonksiyonunuzu buraya ekleyin (örnek olarak, sizin yazdığınızı varsayıyorum)
-void	*ft_memchr(const void *s, int c, size_t n)
+/* void	*ft_memchr(const void *s, int c, size_t n)
 {
 	const unsigned char	*ptr;
 
@@ -14,7 +15,7 @@ void	*ft_memchr(const void *s, int c, size_t n)
 		ptr++;
 	}
 	return (NULL);
-}
+} */
 
 void test_memchr(const char *str, int c, size_t n)
 {

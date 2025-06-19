@@ -1,6 +1,6 @@
 #include <stdio.h> // printf için gerekli
 #include <ctype.h> // isalnum (orijinal) fonksiyonu için gerekli
-#include "libft.h" // ft_isalnum fonksiyonunuzu içeren libft.h dosyanız
+#include "../../src/libft.h" // ft_isalnum fonksiyonunuzu içeren libft.h dosyanız
 
 int main() {
     int c;
