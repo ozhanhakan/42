@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 22:00:38 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/18 12:31:34 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/19 20:51:40 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ static int	ft_fill_words(char const *s, char c, char **res, size_t wc)
 			end++;
 		res[i] = ft_substr(s, start, end - start);
 		if (!res[i])
-			return (ft_free_all(res, i), 1);
+		{
+			ft_free_all(res, i);
+			return (1);
+		}
 		start = end;
 	}
 	res[i] = NULL;
