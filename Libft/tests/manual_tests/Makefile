@@ -22,7 +22,7 @@ TEST_EXES = $(TEST_SRCS:.c=)
 
 # --- PHONY HEDEFLER ---
 # Bu hedeflerin gerçek bir dosya olmadığını belirtir.
-.PHONY: all clean fclean re $(TEST_EXES)
+.PHONY: all bonus clean fclean re $(TEST_EXES)
 
 # --- VARSAYILAN HEDEF ---
 # 'make' argümansız çalıştırılırsa, tüm test çalıştırılabilirlerini derler.
@@ -38,7 +38,7 @@ $(LIBFT_ARCHIVE_PATH):
 	@echo "--- libft.a kontrol ediliyor ve gerekirse güncelleniyor: $(LIBFT_SRC_DIR) ---"
 	# 're' yerine 'all' (veya sadece 'make') kullanıyoruz.
 	# Bu, gereksiz yeniden derlemeleri önler.
-	@$(MAKE) -C $(LIBFT_SRC_DIR) all
+	@$(MAKE) -C $(LIBFT_SRC_DIR) bonus
 
 # Tüm test çalıştırılabilirleri, libft.a'nın güncel olmasına bağlıdır.
 $(TEST_EXES): $(LIBFT_ARCHIVE_PATH)

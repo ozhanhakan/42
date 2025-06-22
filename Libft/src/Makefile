@@ -25,10 +25,10 @@ BONUS_OBJS = $(BONUS_SRCS:.c=.o)
 
 # default target
 all: $(NAME)
-
+	
 # making  archive from objects
 $(NAME): $(OBJS)
-	$(AR) $@ $^
+	$(AR) $(NAME) $(OBJS)
 
 # bonus
 bonus: $(OBJS) $(BONUS_OBJS)
