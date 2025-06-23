@@ -4,3 +4,4 @@
 *.a
 *.o
 Test2/
+main.c
