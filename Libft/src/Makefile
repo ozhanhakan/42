@@ -17,7 +17,7 @@ ft_striteri.c ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c
 
 BONUS_SRCS = ft_lstnew_bonus.c ft_lstadd_front_bonus.c ft_lstsize_bonus.c \
 ft_lstlast_bonus.c ft_lstadd_back_bonus.c ft_lstdelone_bonus.c \
-#ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c
+ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c
 
 # object files
 OBJS = $(SRCS:.c=.o)
@@ -30,11 +30,15 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(AR) $(NAME) $(OBJS)
 
-# bonus
+# Include header dependency so that changes in libft.h recompile objects
+$(OBJS): libft.h
+$(BONUS_OBJS): libft.h
+
+# Bonus target: adds list functions
 bonus: $(OBJS) $(BONUS_OBJS)
 	$(AR) $(NAME) $(OBJS) $(BONUS_OBJS)
 
-# compiling rule
+# Compile .c to .o
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -45,7 +49,8 @@ clean:
 fclean: clean
 	$(RM) $(NAME)
 
+# Recompile everything from scratch
 re: fclean all
 
-# Phony 
+# Targets that are not actual files
 .PHONY: all clean fclean re bonus
