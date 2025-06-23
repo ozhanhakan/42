@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 11:23:40 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/22 13:22:21 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/23 09:07:08 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_list
 	void			*content;
 	struct s_list	*next;
 }	t_list;
+
 t_list	*ft_lstnew(void *content);
 void	ft_lstadd_front(t_list **lst, t_list *new);
 int		ft_lstsize(t_list *lst);
