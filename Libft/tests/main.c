@@ -403,7 +403,7 @@ void	test_ft_putchar_fd(void)
 	fd = open("putchar_test.txt", O_RDONLY);
 	if (fd == -1)
 	{
-		perror("Dosya açma hatası");
+		perror("open() Dosya açma hatası");
 		return ;
 	}
 	char buf[2];
@@ -415,7 +415,7 @@ void	test_ft_putchar_fd(void)
 
 void	test_ft_putstr_fd(void)
 {
-	printf("ft_putstr test: \n");
+	printf("ft_putstr test: ");
 	printf("standart output çıktısı: \n");
 	ft_putstr_fd("Merhaba 42", 1);
 
@@ -429,9 +429,29 @@ void	test_ft_putstr_fd(void)
 
 void	test_ft_putendl_fd(void)
 {
-	
+	printf("ft_putendl test: ");
+	int fd = open("putendl_test.txt", O_WRONLY | O_APPEND);
+	if(fd == -1) // EOF = -1
+	{
+		perror("open() dosya açma hatası");
+		return ;
+	}
+	ft_putendl_fd("putendl_fd", fd);
+	close(fd);
 }
 
+void	test_ft_putnbr_fd(void)
+{
+	printf("ft_putnbr test: ");
+	int fd = open("putnbr_test.txt", O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (fd == -1)
+	{
+		perror("open() dosya açma hatası");
+		return ;
+	}
+	ft_putnbr_fd(42, fd);
+	close(fd);
+}
 int	main( int argc, char *argv[])
 {
 	printf("argc: %d, argv[0]: %s, argv[1]: %s\n", argc, argv[0], argv[1]);
@@ -469,6 +489,8 @@ int	main( int argc, char *argv[])
 	// test_ft_striteri();
 	// test_ft_putchar_fd();
 	// test_ft_putstr_fd();
+	// test_ft_putendl_fd();
+	test_ft_putnbr_fd();
 
 	return (0);
 }
