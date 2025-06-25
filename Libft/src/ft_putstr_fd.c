@@ -6,12 +6,10 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 11:48:42 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/19 13:31:14 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/25 17:20:22 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stddef.h>
 #include "libft.h"
 
 /**

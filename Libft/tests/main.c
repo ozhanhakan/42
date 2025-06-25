@@ -80,11 +80,11 @@ void	test_ft_memset(void)
 	else
 		printf("FAIL\n");
 	
-	int nums [] = {0xFFFF, 0xFFFF, 0xFFFF};
+	int nums [] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 	printf("\nint nums dizisi\n");
 	for(int i=0; i<3; i++)
 		printf("%X, ", nums[i]);
-	ft_memset(nums,0x00,  1); //sizeof(int) *
+	ft_memset(nums,0x00,  sizeof(int)*2); //sizeof(int) *
 	printf("\nmemset sonrası int nums dizisi\n");
 	for(int i=0; i<3; i++)
 		printf("%X, ", nums[i]);
@@ -294,6 +294,12 @@ void	test_ft_substr(void)
 	else
 		printf("FAIL\n");
 }
+void	test_ft_strjoin(void)
+{
+	printf("strjoin test: ");
+	char *s = ft_strjoin("abc", "def");
+	printf("%s",strcmp(s, "abcdef") == 0 ? "OK\n" : "FAIL\n");
+}
 
 void	test_ft_strtrim(char *str, char *c)
 {
@@ -452,6 +458,141 @@ void	test_ft_putnbr_fd(void)
 	ft_putnbr_fd(42, fd);
 	close(fd);
 }
+void	test_ft_lstnew2(void)
+{
+	printf("ft_lstnew test: ");
+	char *content = "new content";
+	t_list *new_node = ft_lstnew(content);
+	printf("%s", new_node->content == content && new_node->next == NULL ? "OK" : "FAIL");
+}
+
+void	test_ft_lstadd_front(void)
+{
+	printf("ft_lstadd_front test: ");
+	t_list *lst = NULL;
+	t_list	*node = ft_lstnew("a");
+	ft_lstadd_front(&lst, node);
+	if(lst == node && lst->next ==  NULL)
+		printf("ok");
+	else
+		printf("FAIL");
+}
+void test_ft_lstsize(void) {
+    printf("ft_lstsize test: ");
+    t_list *lst = ft_lstnew("a");
+    lst->next = ft_lstnew("b");
+    if (ft_lstsize(lst) == 2) 
+        printf("OK\n");
+    else 
+        printf("FAIL\n");
+    free(lst->next);
+    free(lst);
+}
+
+void test_ft_lstlast(void) {
+    printf("ft_lstlast test: ");
+    t_list *lst = ft_lstnew("a");
+    t_list *last = ft_lstnew("b");
+    lst->next = last;
+    if (ft_lstlast(lst) == last) 
+        printf("OK\n");
+    else 
+        printf("FAIL\n");
+    free(last);
+    free(lst);
+}
+
+void test_ft_lstadd_back(void) {
+    printf("ft_lstadd_back test: ");
+    t_list *lst = ft_lstnew("a");
+    t_list *node = ft_lstnew("b");
+    ft_lstadd_back(&lst, node);
+    if (ft_lstlast(lst) == node) 
+        printf("OK\n");
+    else 
+        printf("FAIL\n");
+    free(node);
+    free(lst);
+}
+
+void test_ft_lstdelone(void) {
+    printf("ft_lstdelone test: ");
+    char *content = strdup("test");
+    t_list *node = ft_lstnew(content);
+    ft_lstdelone(node, free);
+    printf("OK\n"); /* Bellek serbest bırakıldı, manuel kontrol gerekir */
+}
+
+void test_ft_lstclear(void) {
+    printf("ft_lstclear test: ");
+    t_list *lst = ft_lstnew(strdup("a"));
+    lst->next = ft_lstnew(strdup("b"));
+    ft_lstclear(&lst, free);
+    if (lst == NULL) 
+        printf("OK\n");
+    else 
+        printf("FAIL\n");
+}
+
+void test_ft_lstiter(void) {
+    printf("ft_lstiter test: ");
+    t_list *lst = ft_lstnew(strdup("a"));
+    lst->next = ft_lstnew(strdup("b"));
+    ft_lstiter(lst, (void (*)(void*))ft_putstr_fd);
+    printf("\nOK\n"); /* Çıktıyı manuel kontrol edin */
+    ft_lstclear(&lst, free);
+}
+
+void test_ft_lstmap(void) {
+    printf("ft_lstmap test: ");
+    t_list *lst = ft_lstnew(strdup("a"));
+    t_list *new = ft_lstmap(lst, (void *(*)(void*))ft_strdup, free);
+    if (strcmp(new->content, "a") == 0) 
+        printf("OK\n");
+    else 
+        printf("FAIL\n");
+    ft_lstclear(&lst, free);
+    ft_lstclear(&new, free);
+}
+
+static char ft_h_strmap(unsigned int ui, char c)
+{
+	if(ft_isdigit(c) && ui != -1)
+		return ('*');
+	return (c);
+}
+// Bonus Parts
+/*lstdelone lstclear lstmap için silme fonksiyonu*/
+static void del_content( void *content)
+{
+	free(content);
+}
+/*list iter için içerik yazıdrma fonksiyonu*/
+static void print_content(void *content)
+{
+	if(content)
+		ft_putstr_fd((char *)content, 1);
+}
+
+/*lstmap için içerik kopyalama fonksiyonu*/
+static void	*duplicate_content(void *content)
+{
+	if(!content)
+		return (NULL);
+	return (ft_strdup((char *)content));
+}
+/*Test Fonksiyonları*/
+static void	test_ft_lstnew(void)
+{
+	char *content = "text";
+	t_list *node = ft_lstnew(content);
+
+	printf("ft_lstnew test: %s\n",
+	node && node->content == content && node->next == NULL ?
+	"OK\n" :
+	"FAIL\n");
+}
+
 int	main( int argc, char *argv[])
 {
 	printf("argc: %d, argv[0]: %s, argv[1]: %s\n", argc, argv[0], argv[1]);
@@ -482,6 +623,7 @@ int	main( int argc, char *argv[])
 
 	// Part-2
 	// test_ft_substr();
+	// test_ft_strjoin();
 	// test_ft_strtrim(argv[1], argv[2]);
 	// test_ft_split(argv[1], argv[2][0]);
 	// test_ft_itoa();
@@ -490,7 +632,19 @@ int	main( int argc, char *argv[])
 	// test_ft_putchar_fd();
 	// test_ft_putstr_fd();
 	// test_ft_putendl_fd();
-	test_ft_putnbr_fd();
+	//test_ft_putnbr_fd();
+
+	// Bonus
+	// test_ft_lstnew();
+	// char s[100]= "burak bugun okula geldi";
+	// char **s1 = ft_split(s,' ');
+	// int i = 0
+	// printf("%s", s1[0]);
+	//ft_Strmapi
+	// char	test[]="abc123def";
+	// char *newtest = ft_strmapi(test, ft_h_strmap);
+	// printf("%s", newtest);
 
 	return (0);
 }
+

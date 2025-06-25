@@ -6,13 +6,11 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 18:20:38 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/18 18:36:19 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/25 16:59:54 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <stddef.h>
-#include <limits.h>
 
 static int	ft_int_len(int n)
 {

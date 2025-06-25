@@ -6,12 +6,10 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:15:29 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/18 22:46:17 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/25 17:22:33 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stddef.h>
 #include "libft.h"
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))

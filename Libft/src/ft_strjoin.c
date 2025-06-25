@@ -6,12 +6,10 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 21:11:40 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/16 22:15:19 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/25 17:22:02 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stddef.h>
 #include "libft.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)

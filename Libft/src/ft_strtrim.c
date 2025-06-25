@@ -6,12 +6,10 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 23:19:19 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/16 23:51:06 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/25 17:06:50 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stddef.h>
 #include "libft.h"
 
 static int	ft_is_in_set(char c, char const *set)

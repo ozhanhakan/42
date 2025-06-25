@@ -15,13 +15,8 @@ ft_memchr.c ft_memcmp.c ft_strnstr.c ft_atoi.c ft_calloc.c ft_strdup.c \
 ft_substr.c ft_strjoin.c ft_strtrim.c ft_split.c ft_itoa.c ft_strmapi.c \
 ft_striteri.c ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c
 
-BONUS_SRCS = ft_lstnew_bonus.c ft_lstadd_front_bonus.c ft_lstsize_bonus.c \
-ft_lstlast_bonus.c ft_lstadd_back_bonus.c ft_lstdelone_bonus.c \
-ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c
-
 # object files
 OBJS = $(SRCS:.c=.o)
-BONUS_OBJS = $(BONUS_SRCS:.c=.o)
 
 # default target
 all: $(NAME)
@@ -32,11 +27,6 @@ $(NAME): $(OBJS)
 
 # Include header dependency so that changes in libft.h recompile objects
 $(OBJS): libft.h
-$(BONUS_OBJS): libft.h
-
-# Bonus target: adds list functions
-bonus: $(OBJS) $(BONUS_OBJS)
-	$(AR) $(NAME) $(OBJS) $(BONUS_OBJS)
 
 # Compile .c to .o
 %.o: %.c
@@ -44,7 +34,7 @@ bonus: $(OBJS) $(BONUS_OBJS)
 
 # cleaning rules
 clean:
-	$(RM) $(OBJS) $(BONUS_OBJS)
+	$(RM) $(OBJS)
 
 fclean: clean
 	$(RM) $(NAME)
@@ -53,4 +43,4 @@ fclean: clean
 re: fclean all
 
 # Targets that are not actual files
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re

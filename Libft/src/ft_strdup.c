@@ -6,12 +6,10 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:16:31 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/16 13:33:18 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/25 17:21:40 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stddef.h>
 #include "libft.h"
 
 char	*ft_strdup(const char *src)

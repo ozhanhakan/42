@@ -6,12 +6,10 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 22:00:38 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/19 20:51:40 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/25 17:21:08 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <stddef.h>
 #include "libft.h"
 
 static size_t	ft_count_words(char const *s, char c)

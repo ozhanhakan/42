@@ -6,11 +6,11 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 23:39:06 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/19 13:29:20 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/25 17:20:05 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
 /**
  * @brief Outputs the character ’c’ to the specified file descriptor.

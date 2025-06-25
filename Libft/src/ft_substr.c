@@ -6,20 +6,18 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 13:55:47 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/16 21:09:39 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/25 17:05:23 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h" // ft_strlen ve gerekirse ft_strlcpy için
-#include <stdlib.h> // malloc için
-#include <stddef.h> // size_t için
+#include "libft.h"
 
-/*
-Allocates memory (using malloc(3)) and returns a
-substring from the string ’s’.
-The substring starts at index ’start’ and has a
-maximum length of ’len’.
-*/
+/**
+ * @brief Allocates memory (using malloc(3)) and returns a
+ * substring from the string ’s’.
+ * The substring starts at index ’start’ and has a
+ * maximum length of ’len’.
+ */
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
