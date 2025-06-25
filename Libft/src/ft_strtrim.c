@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 23:19:19 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/25 17:06:50 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/25 18:03:13 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,6 @@ char	*ft_strtrim(char const *s1, char const *set)
 	end = ft_strlen(s1);
 	while (end > start && ft_is_in_set(s1[end - 1], set))
 		end--;
-	trimmed_str = (char *)malloc(end - start + 1);
-	if (!trimmed_str)
-		return (NULL);
-	ft_memcpy(trimmed_str, s1 + start, end - start);
-	trimmed_str[end - start] = '\0';
+	trimmed_str = ft_substr(s1, start, end - start);
 	return (trimmed_str);
 }
