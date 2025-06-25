@@ -1,0 +1,737 @@
+=== ft_atoi.c ===
+
+static int	ft_isspace(int c)
+{
+	return ((c >= 9 && c <= 13) || c == 32);
+}
+
+int	ft_atoi(const char *nptr)
+{
+	int		c;
+	int		s;
+	int		res;
+	char	*str;
+
+	str = (char *)nptr;
+	c = 0;
+	s = 1;
+	res = 0;
+	while (str[c] && (ft_isspace(str[c])))
+		c++;
+	if (str[c] == '+' || str[c] == '-')
+	{
+		if (str[c] == '-')
+			s *= -1;
+		c++;
+	}
+	while (str[c] && (str[c] >= '0' && str[c] <= '9'))
+	{
+		res = (str[c] - '0') + (res * 10);
+		c++;
+	}
+	return (res * s);
+}
+
+=== ft_bzero.c ===
+
+#include <stddef.h>
+
+void	ft_bzero(void *s, size_t n)
+{
+	unsigned char	*ptr;
+
+	ptr = (unsigned char *)s;
+	while (n--)
+		*ptr++ = '\0';
+}
+
+=== ft_calloc.c ===
+
+#include "libft.h"
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+
+	ptr = (void *)malloc(nmemb * size);
+	if (!ptr)
+		return (NULL);
+	ft_bzero(ptr, nmemb * size);
+	return (ptr);
+}
+
+=== ft_isalnum.c ===
+
+int	ft_isalnum(int c)
+{
+	return (((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+		|| (c >= '0' && c <= '9'));
+}
+
+=== ft_isalpha.c ===
+
+int	ft_isalpha(int c)
+{
+	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
+}
+
+=== ft_isascii.c ===
+
+int	ft_isascii(int c)
+{
+	return (c >= 0 && c <= 127);
+}
+
+=== ft_isdigit.c ===
+
+int	ft_isdigit(int c)
+{
+	return (c >= '0' && c <= '9');
+}
+
+=== ft_isprint.c ===
+
+int	ft_isprint(int c)
+{
+	return (c >= 32 && c <= 126);
+}
+
+=== ft_itoa.c ===
+
+#include <stdlib.h>
+
+static int	ft_int_len(int n)
+{
+	int			len;
+	long long	nb;
+
+	len = 0;
+	nb = n;
+	if (n == 0)
+		return (1);
+	if (nb < 0)
+	{
+		len++;
+		nb = -nb;
+	}
+	while (nb > 0)
+	{
+		len++;
+		nb /= 10;
+	}
+	return (len);
+}
+
+char	*ft_itoa(int n)
+{
+	char		*str;
+	int			len;
+	long long	nb;
+
+	len = ft_int_len(n);
+	str = (char *)malloc(sizeof(char) * len + 1);
+	if (!str)
+		return (NULL);
+	str[len] = '\0';
+	nb = n;
+	if (nb == 0)
+	{
+		str[0] = '0';
+		return (str);
+	}
+	if (nb < 0)
+		nb = -nb;
+	while (nb > 0)
+	{
+		str[--len] = (nb % 10) + '0';
+		nb /= 10;
+	}
+	if (n < 0)
+		str[--len] = '-';
+	return (str);
+}
+
+=== ft_memchr.c ===
+
+#include <stddef.h>
+
+void	*ft_memchr(const void *s, int c, size_t n)
+{
+	const unsigned char	*ptr;
+
+	ptr = (const unsigned char *)s;
+	while (n--)
+	{
+		if (*ptr == (unsigned char)c)
+			return ((void *)ptr);
+		ptr++;
+	}
+	return (NULL);
+}
+
+=== ft_memcmp.c ===
+
+#include <stddef.h>
+
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
+{
+	const unsigned char	*ptr1;
+	const unsigned char	*ptr2;
+
+	if (n == 0)
+		return (0);
+	ptr1 = (const unsigned char *)s1;
+	ptr2 = (const unsigned char *)s2;
+	while (n)
+	{
+		if (*ptr1 != *ptr2)
+			return (*ptr1 - *ptr2);
+		ptr1++;
+		ptr2++;
+		n--;
+	}
+	return (0);
+}
+
+=== ft_memcpy.c ===
+
+#include <stddef.h>
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	unsigned char		*d;
+	unsigned const char	*s;
+
+	d = (unsigned char *)dest;
+	s = (unsigned const char *)src;
+	if (!d && !s)
+		return (NULL);
+	while (n--)
+		*d++ = *s++;
+	return (dest);
+}
+
+=== ft_memmove.c ===
+
+#include <stddef.h>
+
+void	*ft_memmove(void *dest, const void *src, size_t n)
+{
+	unsigned char		*d;
+	const unsigned char	*s;
+
+	d = (unsigned char *)dest;
+	s = (const unsigned char *)src;
+	if (!dest && !src)
+		return ((void *)dest);
+	if (d == s)
+		return (dest);
+	if (d < s)
+	{
+		while (n--)
+			*d++ = *s++;
+	}
+	else
+	{
+		d += n - 1;
+		s += n - 1;
+		while (n--)
+			*d-- = *s--;
+	}
+	return ((void *)dest);
+}
+
+=== ft_memset.c ===
+
+#include <stddef.h>
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	unsigned char	*ptr;
+	size_t			i;
+
+	ptr = (unsigned char *)s;
+	i = 0;
+	while (i < n)
+	{
+		ptr[i] = (unsigned char)c;
+		i++;
+	}
+	return (s);
+}
+
+=== ft_putchar_fd.c ===
+
+#include "libft.h"
+
+/**
+ * @brief Outputs the character ’c’ to the specified file descriptor.
+ * @param c CThe character to output.
+ * @param fd The file descriptor on which to write.
+ */
+void	ft_putchar_fd(char c, int fd)
+{
+	write(fd, &c, 1);
+}
+
+=== ft_putendl_fd.c ===
+
+#include "libft.h"
+
+/**
+ * @brief Outputs the string ’s’ to the specified file descriptor 
+ * followed by a newline.
+ * @param s: The string to output.
+ * @param fd: The file descriptor on which to write.
+ */
+void	ft_putendl_fd(char *s, int fd)
+{
+	if (!s)
+		return ;
+	ft_putstr_fd(s, fd);
+	ft_putchar_fd('\n', fd);
+}
+
+=== ft_putnbr_fd.c ===
+
+#include "libft.h"
+
+/**
+ * @brief Outputs the integer 'n' to the specified file descriptor.
+ * @param n: The integer to output.
+ * @param fd: The file descriptor on which to write.
+ */
+void	ft_putnbr_fd(int n, int fd)
+{
+	if (n == -2147483648)
+	{
+		ft_putstr_fd("-2147483648", fd);
+		return ;
+	}
+	if (n < 0)
+	{
+		ft_putchar_fd('-', fd);
+		n = -n;
+	}
+	if (n >= 10)
+		ft_putnbr_fd(n / 10, fd);
+	ft_putchar_fd((n % 10) + '0', fd);
+}
+
+=== ft_putstr_fd.c ===
+
+#include "libft.h"
+
+/**
+ * @brief Outputs the string ’s’ to the specified file descriptor.
+ * @param s The string to output.
+ * @param fd The file descriptor on which to write.
+ */
+void	ft_putstr_fd(char *s, int fd)
+{
+	size_t	len;
+
+	if (!s)
+		return ;
+	len = ft_strlen(s);
+	write(fd, s, len);
+}
+
+=== ft_split.c ===
+
+#include "libft.h"
+
+static size_t	ft_count_words(char const *s, char c)
+{
+	size_t	i;
+	size_t	words;
+
+	words = 0;
+	i = 0;
+	while (s[i] && s[i] == c)
+		i++;
+	while (s[i])
+	{
+		words++;
+		while (s[i] && s[i] != c)
+			i++;
+		while (s[i] && s[i] == c)
+			i++;
+	}
+	return (words);
+}
+
+static void	ft_free_all(char **arr, size_t count)
+{
+	while (count--)
+		free(arr[count]);
+	free(arr);
+}
+
+static int	ft_fill_words(char const *s, char c, char **res, size_t wc)
+{
+	size_t	i;
+	size_t	start;
+	size_t	end;
+
+	i = -1;
+	start = 0;
+	while (++i < wc)
+	{
+		while (s[start] && s[start] == c)
+			start++;
+		end = start;
+		while (s[end] && s[end] != c)
+			end++;
+		res[i] = ft_substr(s, start, end - start);
+		if (!res[i])
+		{
+			ft_free_all(res, i);
+			return (1);
+		}
+		start = end;
+	}
+	res[i] = NULL;
+	return (0);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	char	**result;
+	size_t	word_count;
+
+	if (!s)
+		return (NULL);
+	word_count = ft_count_words(s, c);
+	result = (char **)malloc(sizeof(char *) * (word_count + 1));
+	if (!result)
+		return (NULL);
+	if (ft_fill_words(s, c, result, word_count))
+		return (NULL);
+	return (result);
+}
+
+=== ft_strchr.c ===
+
+#include <stddef.h>
+
+char	*ft_strchr(const char *s, int c)
+{
+	char	*ptr;
+
+	ptr = (char *)s;
+	while (*ptr)
+	{
+		if (*ptr == (char)c)
+			return (ptr);
+		ptr++;
+	}
+	if ((char)c == '\0')
+		return (ptr);
+	return (NULL);
+}
+
+=== ft_strdup.c ===
+
+#include "libft.h"
+
+char	*ft_strdup(const char *src)
+{
+	char	*copy;
+	size_t	len;
+
+	len = ft_strlen(src);
+	copy = (char *)malloc(sizeof(char) * len + 1);
+	if (copy == 0)
+		return (NULL);
+	ft_memcpy(copy, src, len);
+	copy[len] = '\0';
+	return (copy);
+}
+
+=== ft_striteri.c ===
+
+#include "libft.h"
+
+void	ft_striteri(char *s, void (*f)(unsigned int, char*))
+{
+	unsigned int	i;
+
+	if (!s || !f)
+		return ;
+	i = 0;
+	while (s[i])
+	{
+		f(i, &s[i]);
+		i++;
+	}
+}
+
+=== ft_strjoin.c ===
+
+#include "libft.h"
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	size_t	len1;
+	size_t	len2;
+	char	*new_str;
+
+	if (!s1 || !s2)
+		return (NULL);
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	new_str = (char *)malloc(len1 + len2 + 1);
+	if (!new_str)
+		return (NULL);
+	ft_memcpy(new_str, s1, len1);
+	ft_memcpy(new_str + len1, s2, len2 + 1);
+	return (new_str);
+}
+
+=== ft_strlcat.c ===
+
+#include "libft.h"
+
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
+{
+	size_t	dst_len;
+	size_t	src_len;
+	size_t	i;
+
+	dst_len = 0;
+	src_len = ft_strlen(src);
+	while (dst[dst_len] && dst_len < size)
+		dst_len++;
+	if (dst_len == size)
+		return (size + src_len);
+	i = 0;
+	while (src[i] && dst_len + i + 1 < size)
+	{
+		dst[dst_len + i] = src[i];
+		i++;
+	}
+	if (dst_len + i < size)
+		dst[dst_len + i] = '\0';
+	return (dst_len + src_len);
+}
+
+=== ft_strlcpy.c ===
+
+#include "libft.h"
+
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t	len;
+
+	len = ft_strlen(src);
+	if (size == 0)
+		return (len);
+	while (*src && --size)
+	{
+		*dst++ = *src++;
+	}
+	*dst = '\0';
+	return (len);
+}
+
+=== ft_strlen.c ===
+
+#include <stddef.h>
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	len;
+
+	len = 0;
+	while (s[len])
+		len++;
+	return (len);
+}
+
+=== ft_strmapi.c ===
+
+#include "libft.h"
+
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
+{
+	size_t	i;
+	size_t	s_len;
+	char	*new_str;	
+
+	if (!s || !f)
+		return (NULL);
+	s_len = ft_strlen(s);
+	new_str = (char *)malloc(sizeof(char) * s_len + 1);
+	if (!new_str)
+		return (NULL);
+	i = -1;
+	while (++i < s_len)
+		new_str[i] = f((unsigned int)i, s[i]);
+	new_str[s_len] = '\0';
+	return (new_str);
+}
+
+=== ft_strncmp.c ===
+
+#include <stddef.h>
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	if (n == 0)
+		return (0);
+	while ((s1[i] && s2[i]) && (s1[i] == s2[i]) && i < n - 1)
+	{
+		i++;
+	}
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+=== ft_strnstr.c ===
+
+#include "libft.h"
+
+char	*ft_strnstr(const char *big, const char *little, size_t len)
+{
+	size_t	i;
+	size_t	j;
+	size_t	little_len;
+
+	little_len = ft_strlen(little);
+	i = 0;
+	if (little[i] == '\0')
+		return ((char *)big);
+	while (big[i] && i + little_len <= len)
+	{
+		j = 0;
+		while ((i + j) < len && little[j] && little[j] == big[i + j])
+			j++;
+		if (little[j] == '\0')
+			return ((char *)&big[i]);
+		i++;
+	}
+	return (0);
+}
+
+=== ft_strrchr.c ===
+
+#include "libft.h"
+
+char	*ft_strrchr(const char *s, int c)
+{
+	char	*ptr;
+	size_t	i;
+
+	ptr = (char *)s;
+	i = ft_strlen(s);
+	if ((char)c == '\0')
+		return (ptr + i);
+	while (i)
+	{
+		if (ptr[i - 1] == (char)c)
+			return (ptr + i - 1);
+		i--;
+	}
+	return (NULL);
+}
+
+=== ft_strtrim.c ===
+
+#include "libft.h"
+
+static int	ft_is_in_set(char c, char const *set)
+{
+	size_t	i;
+
+	i = 0;
+	while (set[i])
+	{
+		if (set[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	size_t	start;
+	size_t	end;
+	char	*trimmed_str;
+
+	if (!s1 || !set)
+		return (NULL);
+	start = 0;
+	while (s1[start] && ft_is_in_set(s1[start], set))
+		start++;
+	end = ft_strlen(s1);
+	while (end > start && ft_is_in_set(s1[end - 1], set))
+		end--;
+	trimmed_str = (char *)malloc(end - start + 1);
+	if (!trimmed_str)
+		return (NULL);
+	ft_memcpy(trimmed_str, s1 + start, end - start);
+	trimmed_str[end - start] = '\0';
+	return (trimmed_str);
+}
+
+=== ft_substr.c ===
+
+#include "libft.h"
+
+/**
+ * @brief Allocates memory (using malloc(3)) and returns a
+ * substring from the string ’s’.
+ * The substring starts at index ’start’ and has a
+ * maximum length of ’len’.
+ */
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*sub;
+	size_t	s_len;
+	size_t	actual_len;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+	{
+		sub = (char *)malloc(1);
+		if (!sub)
+			return (NULL);
+		sub[0] = '\0';
+		return (sub);
+	}
+	if (len > (s_len - start))
+		actual_len = s_len - start;
+	else
+		actual_len = len;
+	sub = (char *)malloc(actual_len + 1);
+	if (!sub)
+		return (NULL);
+	ft_strlcpy(sub, s + start, actual_len + 1);
+	return (sub);
+}
+
+=== ft_tolower.c ===
+
+int	ft_tolower(int c)
+{
+	if (c >= 'A' && c <= 'Z')
+		return (c += 32);
+	return (c);
+}
+
+=== ft_toupper.c ===
+
+int	ft_toupper(int c)
+{
+	if (c >= 'a' && c <= 'z')
+		return (c -= 32);
+	return (c);
+}
+
