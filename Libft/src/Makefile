@@ -25,9 +25,6 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(AR) $(NAME) $(OBJS)
 
-# Include header dependency so that changes in libft.h recompile objects
-$(OBJS): libft.h
-
 # Compile .c to .o
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
