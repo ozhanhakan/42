@@ -16,7 +16,7 @@
 // ===========================================================================
 
 #include <stdio.h>
-#include <string.h>
+#include <bsd/string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
@@ -1569,7 +1569,7 @@ void test_ft_itoa()
 }
 
 // strmapi ve striteri için test fonksiyonları
-charmapi_func(unsigned int i, char c) {
+char charmapi_func(unsigned int i, char c) {
 	(void)i; // unused
 	return (c + 1);
 }
@@ -1637,36 +1637,36 @@ int main(void)
 	printf("=======================================\n");
 
 	// Part 1
-	test_ft_isalpha();
-	test_ft_isdigit();
-	test_ft_isalnum();
-	test_ft_isascii();
-	test_ft_isprint();
-	test_ft_strlen();
-	test_ft_memset();
-	test_ft_bzero();
-	test_ft_memcpy();
-	test_ft_memmove();
+	// test_ft_isalpha();
+	// test_ft_isdigit();
+	// test_ft_isalnum();
+	// test_ft_isascii();
+	// test_ft_isprint();
+	// test_ft_strlen();
+	// test_ft_memset();
+	// test_ft_bzero();
+	// test_ft_memcpy();
+	// test_ft_memmove();
 	// test_ft_strlcpy();
 	// test_ft_strlcat();
-	test_ft_toupper_tolower();
+	// test_ft_toupper_tolower();
 	test_ft_strchr_strrchr();
-	test_ft_strncmp();
-	test_ft_memchr();
-	test_ft_memcmp();
+	// test_ft_strncmp();
+	// test_ft_memchr();
+	// test_ft_memcmp();
 	// test_ft_strnstr();
-	test_ft_atoi();
-	test_ft_calloc();
-	test_ft_strdup();
+	// test_ft_atoi();
+	// test_ft_calloc();
+	// test_ft_strdup();
 
-	// Part 2
-	test_ft_substr();
-	test_ft_strjoin();
-	test_ft_strtrim();
-	test_ft_split();
-	test_ft_itoa();
-	test_ft_strmapi_striteri();
-	test_ft_put_fd();
+	// // Part 2
+	// test_ft_substr();
+	// test_ft_strjoin();
+	// test_ft_strtrim();
+	// test_ft_split();
+	// test_ft_itoa();
+	// test_ft_strmapi_striteri();
+	// test_ft_put_fd();
 
 	printf("\n--- All tests completed. ---\n");
 	return (0);

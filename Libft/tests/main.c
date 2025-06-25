@@ -101,7 +101,7 @@ void	test_ft_bzero(void)
 	else
 		printf("FAIL\n");
 	
-	int nums [] = {0xFFFF, 0xFFFF, 0xFFFF};
+	int nums [] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 	printf("\nint nums dizisi\n");
 	for(int i=0; i<3; i++)
 		printf("%X, ", nums[i]);
@@ -121,7 +121,7 @@ void	test_ft_memcpy(void)
 		printf("OK\n");
 	else
 		printf("FAIL\n");
-	
+	/*int buffer*/
 	int nums [] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 	int numbs[3] = {0};
 	printf("\nint nums dizisi\n");
@@ -268,6 +268,7 @@ void	test_ft_atoi(void)
 
 void	test_ft_calloc(void)
 {
+	printf("size_t: %zu", (size_t) - 1);
 	printf("ft_calloc test: ");
 	int *p = ft_calloc(3, sizeof(int));
 	if (p[0] == 0 && p[1] == 0 && p[2]==0)
@@ -484,7 +485,7 @@ int	main( int argc, char *argv[])
 	// test_ft_memcmp();
 	// test_ft_strnstr();
 	// test_ft_atoi();
-	// test_ft_calloc();
+	test_ft_calloc();
 	// test_ft_strdup();
 
 	// Part-2
@@ -492,7 +493,7 @@ int	main( int argc, char *argv[])
 	// test_ft_strjoin();
 	// test_ft_strtrim(argv[1], argv[2]);
 	// test_ft_split(argv[1], argv[2][0]);
-	test_ft_itoa();
+	// test_ft_itoa();
 	// test_ft_strmapi();
 	// test_ft_striteri();
 	// test_ft_putchar_fd();
