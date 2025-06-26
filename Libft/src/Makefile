@@ -6,6 +6,7 @@ CC		= cc
 CFLAGS	= -Wall -Wextra -Werror
 RM		= rm -f
 AR		= ar -crs
+INC = libft.h
 
 # sources files
 SRCS = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
@@ -26,8 +27,8 @@ $(NAME): $(OBJS)
 	$(AR) $(NAME) $(OBJS)
 
 # Compile .c to .o
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.c $(INC)
+	$(CC) $(CFLAGS) -I. -c $< -o $@
 
 # cleaning rules
 clean:
