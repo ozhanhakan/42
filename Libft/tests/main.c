@@ -480,6 +480,7 @@ char rot13_char(unsigned int i, char c)
 
 void rot13_iter(unsigned int i, char *c)
 {
+	
     (void)i; // Kullanılmayan parametre
     
     if (ft_isalpha(*c))
@@ -491,6 +492,17 @@ void rot13_iter(unsigned int i, char *c)
     }
 }
 
+void rot13_spare(unsigned int i, char *c)
+{
+	(void)i;
+	if(isalpha(*c))
+	{
+		if(islower(*c))
+			*c = 'a' + (*c  -'a' + 13) % 26;
+		else
+			*c = 'A' + (*c - 'A' + 13) % 26 ;
+	}
+}
 
 void test_ft_strmapi_striteri(void)
 {

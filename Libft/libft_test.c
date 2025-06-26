@@ -1650,7 +1650,7 @@ int main(void)
 	// test_ft_strlcpy();
 	// test_ft_strlcat();
 	// test_ft_toupper_tolower();
-	test_ft_strchr_strrchr();
+//	test_ft_strchr_strrchr();
 	// test_ft_strncmp();
 	// test_ft_memchr();
 	// test_ft_memcmp();
