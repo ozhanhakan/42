@@ -460,6 +460,66 @@ void	test_ft_putnbr_fd(void)
 	close(fd);
 }
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+char rot13_char(unsigned int i, char c)
+{
+    (void)i; // Kullanılmayan parametre uyarısını önle
+    
+    if (isalpha(c)) // Sadece harfleri şifrele
+    {
+        if (islower(c))
+            return 'a' + (c - 'a' + 13) % 26;
+        else
+            return 'A' + (c - 'A' + 13) % 26;
+    }
+    return c; // Harf değilse olduğu gibi döndür
+}
+
+void rot13_iter(unsigned int i, char *c)
+{
+    (void)i; // Kullanılmayan parametre
+    
+    if (ft_isalpha(*c))
+    {
+        if (islower(*c))
+            *c = 'a' + (*c - 'a' + 13) % 26;
+        else
+            *c = 'A' + (*c - 'A' + 13) % 26;
+    }
+}
+
+
+void test_ft_strmapi_striteri(void)
+{
+	const char *text = "Rnpu cebwrpg va gur 42 Pbzzba Pber pbagnvaf na rapbqrq uvag. Sbe rnpu\
+	pvepyr, bayl bar cebwrpg cebivqrf gur pbeerpg uvag arrqrq sbe gur\
+arkg pvepyr. Guvf punyyratr vf vaqvivqhny, jvgu n svany cevmr sbe\
+bar fghqrag. Fgnss zrzoref znl cnegvpvcngr ohg ner abg ryvtvoyr sbe n\
+cevmr. Ner lbh nzbat gur irel svefg gb fbyir n pvepyr? Fraq gur uvagf\
+jvgu rkcynangvbaf gb by@42.se gb or nqqrq gb gur yrnqreobneq. Gur\
+uvag sbe guvf svefg cebwrpg, juvpu znl pbagnva nantenzzrq jbeqf, vf:\
+Jbys bs ntragvir cnegvpyrf gung qvfcebir terral gb lbhe ubzrf qan\
+gung cebjfr lbhe fgbby";
+    //const char *text2 = "Uryyb, Jbeyq 123!"; // Uryyb, Jbeyq 123!
+    char *encrypted_mapi;
+    char *encrypted_iteri;
+
+    // ft_strmapi ile ROT13 şifreleme
+    encrypted_mapi = ft_strmapi(text, rot13_char);
+    printf("ROT13 (strmapi): %s\n", encrypted_mapi);
+
+    // ft_striteri ile ROT13 şifreleme
+    encrypted_iteri = strdup(text); // Orijinal metni kopyala
+    ft_striteri(encrypted_iteri, rot13_iter);
+    printf("ROT13 (striteri): %s\n", encrypted_iteri);
+
+    free(encrypted_mapi);
+    free(encrypted_iteri);
+}
+
 int	main( int argc, char *argv[])
 {
 	printf("argc: %d, argv[0]: %s, argv[1]: %s\n", argc, argv[0], argv[1]);
@@ -485,7 +545,7 @@ int	main( int argc, char *argv[])
 	// test_ft_memcmp();
 	// test_ft_strnstr();
 	// test_ft_atoi();
-	test_ft_calloc();
+	// test_ft_calloc();
 	// test_ft_strdup();
 
 	// Part-2
@@ -495,6 +555,7 @@ int	main( int argc, char *argv[])
 	// test_ft_split(argv[1], argv[2][0]);
 	// test_ft_itoa();
 	// test_ft_strmapi();
+	test_ft_strmapi_striteri();
 	// test_ft_striteri();
 	// test_ft_putchar_fd();
 	// test_ft_putstr_fd();
