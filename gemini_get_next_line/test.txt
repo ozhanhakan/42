@@ -1,0 +1,5 @@
+Bu birinci satırdır.
+Bu da ikinci satır.
+
+Bu dördüncü satır (arada boşluk var).
+Son satırda yeni satır karakteri yok.
