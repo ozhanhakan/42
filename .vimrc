@@ -3,6 +3,14 @@ syntax on
 let g:user42 = 'hozhan'
 let g:mail42 = 'hozhan@student.42kocaeli.com.tr'
 
+" Hibrit modda başlat
+set number relativenumber
+
+" Göreceli numaraları kapatma kısayolu (F3)
+nnoremap <F3> :set relativenumber!<CR>
+" F4: TÜM satır numaralarını aç/kapa
+nnoremap <F4> :set number!<CR>
+
 " ----------------------------
 " Temel Ayarlar
 " ----------------------------
