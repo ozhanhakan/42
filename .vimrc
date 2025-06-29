@@ -72,7 +72,6 @@ let g:clang_format#style_options = {
     \ "IndentWidth": 4,
     \ "UseTab": "Always",
     \ "BreakBeforeBraces": "Linux"}
-autocmd FileType c nnoremap <F3> :ClangFormat<CR>
 
 autocmd FileType c inoremap { {<CR>}<Esc>O
 autocmd FileType c inoremap ( ()<Left>
