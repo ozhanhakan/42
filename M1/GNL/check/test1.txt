@@ -1,0 +1,4 @@
+Merhaba
+42
+get_next_line
+test1

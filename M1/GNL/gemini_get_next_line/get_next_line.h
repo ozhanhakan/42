@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 21:57:23 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/28 21:57:35 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/06/29 10:44:20 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 #  define BUFFER_SIZE 42
 # endif
 
-// Maksimum dosya tanımlayıcı sayısı için makul ve güvenli bir limit.
 # define MAX_FD 1024
 
 char	*get_next_line(int fd);

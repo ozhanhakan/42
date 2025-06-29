@@ -1,0 +1,31 @@
+#include "get_next_line.h" // Fonksiyon prototipleri ve yardımcılar
+#include <fcntl.h>          // open fonksiyonu için (dosya açma)
+#include <stdio.h>          // printf fonksiyonu için (ekrana yazdırma)
+
+// Temel test main'i: test.txt dosyasını satır satır okur ve ekrana yazar.
+int main(void)
+{
+    int fd = open("test.txt", O_RDONLY); // test.txt dosyasını okuma modunda aç
+    char *line; // Okunan satırı tutacak pointer
+    while ((line = get_next_line(fd))) // Satır satır oku
+    {
+        printf("%s", line); // Satırı ekrana yazdır
+        free(line);         // Belleği serbest bırak
+    }
+    close(fd); // Dosyayı kapat
+    return 0; // Programı başarılı şekilde sonlandır
+}
+
+/*
+Kullanılan keywordler ve açıklamaları:
+- #include: Başka bir dosyanın içeriğini bu dosyaya ekler.
+- int: Tam sayı veri tipi.
+- char *: Karakter dizisi (string) için pointer.
+- void: Fonksiyonun dönüş tipi yok anlamında.
+- return: Fonksiyondan çıkış ve değer döndürme.
+- while: Koşullu döngü başlatır.
+- printf: Ekrana çıktı verir.
+- open: Dosya açar, dosya tanımlayıcısı döndürür.
+- close: Dosya tanımlayıcısını kapatır.
+- free: malloc ile ayrılan belleği serbest bırakır.
+*/
