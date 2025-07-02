@@ -1,5 +1,4 @@
-Tüm proje kaynak dosyalarına (get_next_line.c, get_next_line_utils.c, main.c) ayrıntılı Türkçe satır içi açıklamalar eklendi.
-
-Artık her fonksiyonun ve önemli kod bloğunun ne yaptığını ve neden o şekilde tasarlandığını kolayca görebilirsin.
-
-Başka bir dosya veya açıklama eklememi ister misin?
+line1
+line2
+line3
+line4

@@ -1,45 +1,28 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/28 16:17:40 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/02 12:38:04 by hozhan           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "../include/get_next_line_bonus.h"
 
-
-#include "../include/get_next_line.h"
-
-// get_next_line fonksiyonu, fd'den bir satır okur ve döndürür.
-// Okuma işlemi için static bir stash (bağlı liste) kullanılır.
 char	*get_next_line(int fd)
 {
-	static t_list	*stash = NULL;
+	static t_list	*stash[4096];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= 4096 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = NULL;
-	read_and_stash(fd, &stash);
-	if (stash == NULL)
+	read_and_stash(fd, &stash[fd]);
+	if (stash[fd] == NULL)
 		return (NULL);
-	extract_line(stash, &line);
-	clean_stash(&stash);
+	extract_line(stash[fd], &line);
+	clean_stash(&stash[fd]);
 	if (line == NULL || line[0] == '\0')
 	{
-		free_stash(stash);
-		stash = NULL;
+		free_stash(stash[fd]);
+		stash[fd] = NULL;
 		free(line);
 		return (NULL);
 	}
 	return (line);
 }
 
-// Dosyadan BUFFER_SIZE kadar okuma yapar ve okunan veriyi stash'e ekler.
-// Satır sonu (\n) bulunana kadar veya dosya bitene kadar devam eder.
 void	read_and_stash(int fd, t_list **stash)
 {
 	char	*buf;

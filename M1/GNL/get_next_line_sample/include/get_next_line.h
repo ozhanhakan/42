@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 16:16:32 by hozhan            #+#    #+#             */
-/*   Updated: 2025/06/28 16:20:53 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/02 12:57:42 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <unistd.h>    // read ve close fonksiyonları için gerekli
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 5 // Okuma işlemlerinde kullanılacak buffer boyutu, default 5
+#  define BUFFER_SIZE 42 // Okuma işlemlerinde kullanılacak buffer boyutu, default 5
 # endif
 
 // Okunan verileri satır satır biriktirmek için kullanılan bağlı liste yapısı
