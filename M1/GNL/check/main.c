@@ -14,8 +14,21 @@ int main(void)
     }
     close(fd); // Dosyayı kapat
     return 0; // Programı başarılı şekilde sonlandır
+    main2();
 }
-
+int main2(void)
+{
+    int fd = open("test1.txt", O_RDONLY);
+    char *line;
+    line = get_next_line(fd);
+    while (line)
+    {
+        printf("%s", line);
+        free(line);
+        line = get_next_line(fd);
+    }
+    
+}
 /*
 Kullanılan keywordler ve açıklamaları:
 - #include: Başka bir dosyanın içeriğini bu dosyaya ekler.
