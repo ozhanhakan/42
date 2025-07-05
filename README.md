@@ -1,7 +1,7 @@
 # 42 Projeleri - Piscine ve Libft
 
 ## Genel Bakış
-Bu depo, 42 okulu müfredatı kapsamında tamamladığım **Piscine** ve **Libft** projelerini içermektedir. Piscine, C programlama diline yoğun bir giriş sunarken, Libft, ilerideki projelerde kullanılabilecek özel bir C kütüphanesi oluşturmayı amaçlar. 
+Bu depo, 42 okulu müfredatı kapsamında tamamladığım projeleri içermektedir. Piscine, C programlama diline yoğun bir giriş sunarken, Libft, ilerideki projelerde kullanılabilecek özel bir C kütüphanesi oluşturmayı amaçlar. 
 
 ## Projeler
 
