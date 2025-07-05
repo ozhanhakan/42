@@ -1,4 +1,0 @@
-t1.1:Merhaba
-t1.2:42
-t1.3:get_next_line
-t1.4:test1

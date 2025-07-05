@@ -1,6 +1,16 @@
-#include "get_next_line_bonus.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/05 09:44:29 by hozhan            #+#    #+#             */
+/*   Updated: 2025/07/05 09:47:16 by hozhan           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static char	*stash[MAX_FD];
+#include "get_next_line_bonus.h"
 
 static char	*read_to_newline(int fd, char *old_stash)
 {
@@ -29,9 +39,12 @@ static char	*read_to_newline(int fd, char *old_stash)
 
 static char	*extract_line(char *full_stash)
 {
-	int		i = 0;
+	int		i;
+	int		j;
 	char	*line;
 
+	i = 0;
+	j = 0;
 	if (!full_stash || !full_stash[0])
 		return (NULL);
 	while (full_stash[i] && full_stash[i] != '\n')
@@ -41,17 +54,23 @@ static char	*extract_line(char *full_stash)
 	line = malloc(i + 1);
 	if (!line)
 		return (NULL);
-	for (int j = 0; j < i; j++)
+	while (j < i)
+	{
 		line[j] = full_stash[j];
+		j++;
+	}
 	line[i] = '\0';
 	return (line);
 }
 
 static char	*update_stash(char *full_stash)
 {
-	int		i = 0, j = 0;
+	int		i;
+	int		j;
 	char	*new_stash;
 
+	i = 0;
+	j = 0;
 	while (full_stash[i] && full_stash[i] != '\n')
 		i++;
 	if (!full_stash[i])
@@ -72,9 +91,10 @@ static char	*update_stash(char *full_stash)
 
 char	*get_next_line(int fd)
 {
-	char	*line;
+	char		*line;
+	static char	*stash[1024];
 
-	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash[fd] = read_to_newline(fd, stash[fd]);
 	if (!stash[fd])
