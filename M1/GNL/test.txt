@@ -1,0 +1,8 @@
+
+
+
+
+l1:Merhaba
+l2:42
+l3:get_next_line
+l4:test1
