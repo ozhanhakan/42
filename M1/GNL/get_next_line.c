@@ -6,58 +6,49 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 08:49:59 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/09 14:28:10 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/09 14:56:37 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static void * ft_free(char **ptr)
+static void	*ft_free(char **ptr)
 {
-	if (!*ptr)
-		free(*ptr); // Eğer ptr NULL ise, free et
+	if (ptr && *ptr)
+	{
+		free(*ptr);
+		*ptr = NULL;
+	}
 	return (NULL);
 }
-// Dosyadan satır sonuna kadar okuma ve eski stash ile birleştirme
-// NULL check'ler kritik: malloc, read, strjoin işlemlerinde her zaman kontrol edilmeli
+
 static char	*read_to_newline(int fd, char *old_stash)
 {
 	char	*buf;
 	int		bytes;
 
-	buf = malloc(BUFFER_SIZE + 1); // Okuma için buffer ayır
+	buf = malloc(BUFFER_SIZE + 1);
 	if (!buf)
-		{
-			if(old_stash) // Eski stash varsa serbest bırak		
-				free(old_stash); // Bellek sızıntısını önlemek için eski stash'i de free et
-			return (NULL); // Eğer malloc başarısızsa NULL dön
-		} // malloc başarısızsa NULL dön
+		return (ft_free(&old_stash));
 	bytes = 1;
-	// Satır sonu bulunana veya dosya bitene kadar oku
 	while (bytes > 0 && !ft_strchr(old_stash, '\n'))
 	{
-		bytes = read(fd, buf, BUFFER_SIZE); // Dosyadan oku
-		if (bytes == -1) // Okuma hatası
+		bytes = read(fd, buf, BUFFER_SIZE);
+		if (bytes == -1)
 		{
 			free(buf);
-			free(old_stash); // Bellek sızıntısını önlemek için eski stash'i de free et
+			free(old_stash);
 			return (NULL);
 		}
-		buf[bytes] = '\0'; // Okunan veriyi null-terminate et
-		old_stash = ft_strjoin_and_free(old_stash, buf); // Okunanı eski stash ile birleştir
-		// NULL check: malloc veya strjoin başarısızsa leak ve segfault'u önler
+		buf[bytes] = '\0';
+		old_stash = ft_strjoin_and_free(old_stash, buf);
 		if (!old_stash)
-		{
-			free(buf);
-			return (NULL);
-		}
+			return (ft_free(&buf));
 	}
-	free(buf); // Okuma buffer'ını serbest bırak
-	return (old_stash); // Satır sonuna kadar okunan veriyi döndür
+	free(buf);
+	return (old_stash);
 }
 
-// Stash'ten bir satırı ayıkla (satır sonu dahil)
-// NULL check: full_stash yoksa veya boşsa hemen NULL dönülmeli
 static char	*extract_line(char *full_stash)
 {
 	int		i;
@@ -66,26 +57,24 @@ static char	*extract_line(char *full_stash)
 
 	i = 0;
 	j = 0;
-	if (!full_stash || !full_stash[0]) // NULL veya boş stash için erken çıkış
+	if (!full_stash || !full_stash[0])
 		return (NULL);
-	while (full_stash[i] && full_stash[i] != '\n') // Satır sonuna kadar ilerle
+	while (full_stash[i] && full_stash[i] != '\n')
 		i++;
-	if (full_stash[i] == '\n') // Satır sonunu da dahil et
+	if (full_stash[i] == '\n')
 		i++;
-	line = malloc(i + 1); // Satır için yer ayır
+	line = malloc(i + 1);
 	if (!line)
-		return (NULL); // malloc başarısızsa NULL dön
+		return (NULL);
 	while (j < i)
 	{
-		line[j] = full_stash[j]; // Satırı kopyala
+		line[j] = full_stash[j];
 		j++;
 	}
-	line[i] = '\0'; // Null-terminate et TODO: substr kullan, stash update et.
-	return (line); // Satırı döndür
+	line[i] = '\0';
+	return (line);
 }
 
-// Stash'ten döndürülen satırdan sonrasını yeni stash olarak ayıkla
-// NULL check: full_stash yoksa veya satır sonu yoksa hemen NULL dönülmeli
 static char	*update_stash(char *full_stash)
 {
 	int		i;
@@ -95,47 +84,39 @@ static char	*update_stash(char *full_stash)
 	i = 0;
 	j = 0;
 	if (!full_stash)
-		return (NULL); // NULL stash için erken çıkış
-	while (full_stash[i] && full_stash[i] != '\n') // Satır sonuna kadar ilerle
-		i++;
-	if (!full_stash[i]) // Satır sonu yoksa, stash'i temizle
-	{
-		free(full_stash);
 		return (NULL);
-	}
-	i++; // Satır sonunu atla
-	new_stash = malloc(ft_strlen(full_stash + i) + 1); // Kalan veri için yer ayır
+	while (full_stash[i] && full_stash[i] != '\n')
+		i++;
+	if (!full_stash[i])
+		return (ft_free(&full_stash));
+	i++;
+	new_stash = malloc(ft_strlen(full_stash + i) + 1);
 	if (!new_stash)
-		{
-			free(full_stash); // Bellek sızıntısını önlemek için eski stash'i de free et
-			return (NULL);
-		} // malloc başarısızsa NULL dön
+		return (ft_free(&full_stash));
 	while (full_stash[i])
-		new_stash[j++] = full_stash[i++]; // Kalan veriyi kopyala
-	new_stash[j] = '\0'; // Null-terminate et
-	free(full_stash); // Eski stash'i serbest bırak
-	return (new_stash); // Yeni stash'i döndür
+		new_stash[j++] = full_stash[i++];
+	new_stash[j] = '\0';
+	free(full_stash);
+	return (new_stash);
 }
 
-// Ana fonksiyon: her çağrıda bir satır döndürür
-// NULL check: her adımda malloc, okuma ve ayıklama işlemlerinde NULL kontrolü yapılmalı
 char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*stash;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL); // Geçersiz fd veya buffer için erken çıkış
-	stash = read_to_newline(fd, stash); // Satır sonuna kadar oku ve stash'i güncelle
+		return (NULL);
+	stash = read_to_newline(fd, stash);
 	if (!stash)
-		return (NULL); // Okuma veya birleştirme başarısızsa NULL dön
-	line = extract_line(stash); // Bir satır ayıkla
+		return (NULL);
+	line = extract_line(stash);
 	if (!line)
 	{
-		free(stash); // Bellek sızıntısını önle
+		free(stash);
 		stash = NULL;
 		return (NULL);
 	}
-	stash = update_stash(stash); // Kalan veriyi stash'e kaydet
-	return (line); // Satırı döndür
+	stash = update_stash(stash);
+	return (line);
 }

@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 08:50:04 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/09 14:06:40 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/09 14:59:06 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ char	*ft_strjoin_and_free(char *s1, char *s2)
 		return (ft_strdup(s2));
 	res = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!res)
-		{
-			free(s1);
-			return (NULL);
-		}
+	{
+		free(s1);
+		return (NULL);
+	}
 	i = -1;
 	while (s1[++i])
 		res[i] = s1[i];
