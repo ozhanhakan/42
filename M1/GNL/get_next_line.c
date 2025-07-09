@@ -6,21 +6,11 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 08:49:59 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/09 14:56:37 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/09 15:05:34 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-static void	*ft_free(char **ptr)
-{
-	if (ptr && *ptr)
-	{
-		free(*ptr);
-		*ptr = NULL;
-	}
-	return (NULL);
-}
 
 static char	*read_to_newline(int fd, char *old_stash)
 {

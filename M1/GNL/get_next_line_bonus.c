@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:44:29 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/06 01:38:25 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/09 15:15:38 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	*read_to_newline(int fd, char *old_stash)
 
 	buf = malloc(BUFFER_SIZE + 1);
 	if (!buf)
-		return (NULL);
+		return (ft_free(&old_stash));
 	bytes = 1;
 	while (bytes > 0 && !ft_strchr(old_stash, '\n'))
 	{
@@ -32,6 +32,8 @@ static char	*read_to_newline(int fd, char *old_stash)
 		}
 		buf[bytes] = '\0';
 		old_stash = ft_strjoin_and_free(old_stash, buf);
+		if (!old_stash)
+			return (ft_free(&buf));
 	}
 	free(buf);
 	return (old_stash);
@@ -71,17 +73,16 @@ static char	*update_stash(char *full_stash)
 
 	i = 0;
 	j = 0;
+	if (!full_stash)
+		return (NULL);
 	while (full_stash[i] && full_stash[i] != '\n')
 		i++;
 	if (!full_stash[i])
-	{
-		free(full_stash);
-		return (NULL);
-	}
+		return (ft_free(&full_stash));
 	i++;
 	new_stash = malloc(ft_strlen(full_stash + i) + 1);
 	if (!new_stash)
-		return (NULL);
+		return (ft_free(&full_stash));
 	while (full_stash[i])
 		new_stash[j++] = full_stash[i++];
 	new_stash[j] = '\0';
@@ -94,12 +95,18 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*stash[1024];
 
-	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash[fd] = read_to_newline(fd, stash[fd]);
 	if (!stash[fd])
 		return (NULL);
 	line = extract_line(stash[fd]);
+	if (!line)
+	{
+		free(stash[fd]);
+		stash[fd] = NULL;
+		return (NULL);
+	}
 	stash[fd] = update_stash(stash[fd]);
 	return (line);
 }

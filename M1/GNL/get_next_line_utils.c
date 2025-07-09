@@ -6,11 +6,21 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 08:50:04 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/09 14:59:06 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/09 15:06:08 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void	*ft_free(char **ptr)
+{
+	if (ptr && *ptr)
+	{
+		free(*ptr);
+		*ptr = NULL;
+	}
+	return (NULL);
+}
 
 size_t	ft_strlen(const char *s)
 {

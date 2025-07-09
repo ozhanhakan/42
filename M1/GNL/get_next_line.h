@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 08:49:55 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/05 12:30:24 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/09 15:06:26 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s);
 char	*ft_strjoin_and_free(char *s1, char *s2);
 size_t	ft_strlen(const char *s);
+void	*ft_free(char **ptr);
 
 #endif
