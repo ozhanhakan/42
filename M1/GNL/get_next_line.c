@@ -6,12 +6,18 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 08:49:59 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/07 01:09:11 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/09 14:28:10 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+static void * ft_free(char **ptr)
+{
+	if (!*ptr)
+		free(*ptr); // Eğer ptr NULL ise, free et
+	return (NULL);
+}
 // Dosyadan satır sonuna kadar okuma ve eski stash ile birleştirme
 // NULL check'ler kritik: malloc, read, strjoin işlemlerinde her zaman kontrol edilmeli
 static char	*read_to_newline(int fd, char *old_stash)
@@ -21,7 +27,11 @@ static char	*read_to_newline(int fd, char *old_stash)
 
 	buf = malloc(BUFFER_SIZE + 1); // Okuma için buffer ayır
 	if (!buf)
-		return (NULL); // malloc başarısızsa NULL dön
+		{
+			if(old_stash) // Eski stash varsa serbest bırak		
+				free(old_stash); // Bellek sızıntısını önlemek için eski stash'i de free et
+			return (NULL); // Eğer malloc başarısızsa NULL dön
+		} // malloc başarısızsa NULL dön
 	bytes = 1;
 	// Satır sonu bulunana veya dosya bitene kadar oku
 	while (bytes > 0 && !ft_strchr(old_stash, '\n'))
@@ -96,7 +106,10 @@ static char	*update_stash(char *full_stash)
 	i++; // Satır sonunu atla
 	new_stash = malloc(ft_strlen(full_stash + i) + 1); // Kalan veri için yer ayır
 	if (!new_stash)
-		return (NULL); // malloc başarısızsa NULL dön
+		{
+			free(full_stash); // Bellek sızıntısını önlemek için eski stash'i de free et
+			return (NULL);
+		} // malloc başarısızsa NULL dön
 	while (full_stash[i])
 		new_stash[j++] = full_stash[i++]; // Kalan veriyi kopyala
 	new_stash[j] = '\0'; // Null-terminate et
