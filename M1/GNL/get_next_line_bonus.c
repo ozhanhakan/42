@@ -95,7 +95,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*stash[1024];
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash[fd] = read_to_newline(fd, stash[fd]);
 	if (!stash[fd])
