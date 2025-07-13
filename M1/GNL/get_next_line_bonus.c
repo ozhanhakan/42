@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:44:29 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/09 15:15:38 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/13 12:51:59 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*stash[1024];
 
+	line = NULL;
 	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash[fd] = read_to_newline(fd, stash[fd]);
@@ -102,11 +103,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = extract_line(stash[fd]);
 	if (!line)
-	{
-		free(stash[fd]);
-		stash[fd] = NULL;
-		return (NULL);
-	}
+		return (ft_free(&stash[fd]));
 	stash[fd] = update_stash(stash[fd]);
 	return (line);
 }
