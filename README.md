@@ -1,7 +1,7 @@
-# 42 Projeleri - Piscine ve Libft
+# 42 Projeleri - Piscine ve Temel Müfredat
 
 ## Genel Bakış
-Bu depo, 42 okulu müfredatı kapsamında tamamladığım **Piscine** ve **Libft** projelerini içermektedir. Piscine, C programlama diline yoğun bir giriş sunarken, Libft, ilerideki projelerde kullanılabilecek özel bir C kütüphanesi oluşturmayı amaçlar. 
+Bu depo, 42 okulu müfredatı kapsamında tamamladığım **Piscine** ve **Temel Müfredat** projelerini içermektedir. 
 
 ## Projeler
 
@@ -14,29 +14,13 @@ Piscine, C programlama dilinin temel kavramlarını öğretmek için tasarlanmı
 - **C02–C08**: Dizi manipülasyonu, bellek yönetimi ve dosya işlemleri.
 - **Rush**: Konsolda desen çizimi yapan projeler (Rush 00, Rush 01).
 
-### 2. Libft
+### 2. Temel Müfredat M0: Libft
 **Libft**, standart C kütüphanesindeki bazı işlevlerin yeniden yazılmasını ve ek yardımcı işlevlerin geliştirilmesini içeren bir projedir. İlerideki 42 projelerinde kullanılmak üzere temel bir kütüphane olarak tasarlanmıştır.
 
 #### Özellikler
 - **Zorunlu Kısım**: `ft_strlen`, `ft_strcpy`, `ft_atoi` gibi işlevlerin yeniden yazılması.
 - **Bonus Kısım**: Bağlı liste işlevleri (örneğin, `ft_lstnew`, `ft_lstadd_front`, `ft_lstsize`).
 - **Ek İşlevler**: Proje gereksinimlerinin ötesinde eklenen yardımcı işlevler (varsa).
-
-#### Dosya Yapısı
-```
-libft/
-├── Makefile
-├── libft.h
-├── libft.a
-├── src/
-│   ├── ft_strlen.c
-│   ├── ft_strcpy.c
-│   ├── ...
-└── bonus/
-    ├── ft_lstnew.c
-    ├── ft_lstadd_front.c
-    ├── ...
-```
 
 ## Kurulum ve Kullanım
 
@@ -69,13 +53,6 @@ make
 ```bash
 gcc programiniz.c -L. -lft -o programiniz
 ```
-
-## Notlar
-- Sorular veya iş birliği fırsatları için lütfen iletişime geçin.
-
-## İletişim
-- **Ad**: Hakan Özhan
-- **E-posta**: ozhanhakan@gmail.com
 
 ## Lisans
 Bu proje, 42 okulu müfredatı kapsamında eğitim amaçlı geliştirilmiştir.
