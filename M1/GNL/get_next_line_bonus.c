@@ -6,18 +6,20 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:44:29 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/13 12:51:59 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/14 15:30:40 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
+#include <unistd.h>
+#include <stdlib.h>
 
 static char	*read_to_newline(int fd, char *old_stash)
 {
 	char	*buf;
-	int		bytes;
+	ssize_t	bytes;
 
-	buf = malloc(BUFFER_SIZE + 1);
+	buf = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buf)
 		return (ft_free(&old_stash));
 	bytes = 1;
@@ -53,7 +55,7 @@ static char	*extract_line(char *full_stash)
 		i++;
 	if (full_stash[i] == '\n')
 		i++;
-	line = malloc(i + 1);
+	line = (char *)malloc(i + 1);
 	if (!line)
 		return (NULL);
 	while (j < i)
@@ -80,7 +82,7 @@ static char	*update_stash(char *full_stash)
 	if (!full_stash[i])
 		return (ft_free(&full_stash));
 	i++;
-	new_stash = malloc(ft_strlen(full_stash + i) + 1);
+	new_stash = (char *)malloc(ft_strlen(full_stash + i) + 1);
 	if (!new_stash)
 		return (ft_free(&full_stash));
 	while (full_stash[i])
@@ -95,7 +97,6 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*stash[1024];
 
-	line = NULL;
 	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash[fd] = read_to_newline(fd, stash[fd]);
@@ -103,7 +104,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = extract_line(stash[fd]);
 	if (!line)
-		return (ft_free(&stash[fd]));
+	{
+		free(stash[fd]);
+		stash[fd] = NULL;
+		return (NULL);
+	}
 	stash[fd] = update_stash(stash[fd]);
 	return (line);
 }

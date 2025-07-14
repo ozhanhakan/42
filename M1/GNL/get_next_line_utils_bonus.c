@@ -6,11 +6,11 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:27:38 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/09 15:07:28 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/14 15:25:45 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <stdlib.h>
 
 void	*ft_free(char **ptr)
 {
@@ -49,7 +49,7 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strdup(const char *s)
+static char	*ft_strdup(const char *s)
 {
 	size_t	len;
 	size_t	i;
@@ -58,7 +58,7 @@ char	*ft_strdup(const char *s)
 	if (!s)
 		return (NULL);
 	len = ft_strlen(s);
-	dup = malloc(len + 1);
+	dup = (char *)malloc(len + 1);
 	if (!dup)
 		return (NULL);
 	i = 0;
@@ -79,7 +79,7 @@ char	*ft_strjoin_and_free(char *s1, char *s2)
 
 	if (!s1)
 		return (ft_strdup(s2));
-	res = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	res = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!res)
 	{
 		free(s1);
