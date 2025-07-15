@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 14:05:41 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/15 17:22:56 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/15 18:44:33 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	ft_print_pointer(void *ptr)
 	count = 0;
 	if (!ptr)
 		return (ft_putstr_fd("(nil)", 1));
-	count += ft_putstr_fd("0x", 1);	
+	count += ft_putstr_fd("0x", 1);
 	hex_str = ft_itoa_base((unsigned long)ptr, "0123456789abcdef");
 	if (!hex_str)
 		return (-1);

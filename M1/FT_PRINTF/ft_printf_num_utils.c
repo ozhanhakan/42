@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 14:07:45 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/15 17:25:40 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/15 18:47:03 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,12 @@ static int	ft_count_digits_base(unsigned long n, int base)
 
 	if (n == 0)
 		return (1);
-	
 	count = 0;
 	while (n > 0)
 	{
 		n /= base;
 		count++;
 	}
-	
 	return (count);
 }
 
@@ -38,7 +36,7 @@ char	*ft_itoa(int n)
 	long long		num;
 
 	num = n;
-	sign = (num < 0) ? 1 : 0;
+	sign = (num < 0);
 	if (sign)
 		num = -num;
 	len = ft_count_digits_base(num, 10) + sign;
@@ -61,7 +59,7 @@ char	*ft_utoa(unsigned int n)
 	char	*str;
 	int		len;
 
- 	len = ft_count_digits_base(n, 10);
+	len = ft_count_digits_base(n, 10);
 	str = malloc(sizeof(char) * (len + 1));
 	if (!str)
 		return (NULL);
@@ -82,7 +80,6 @@ char	*ft_itoa_base(unsigned long num, char *base)
 
 	if (!base)
 		return (NULL);
-	
 	base_len = (int)ft_strlen(base);
 	if (base_len < 2)
 		return (NULL);
