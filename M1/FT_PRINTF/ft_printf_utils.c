@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 14:07:45 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/13 14:07:48 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/15 15:24:36 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,21 @@
 static int	ft_count_digits(long long n);
 static int	ft_count_digits_unsigned(unsigned int n);
 static int	ft_count_digits_base(unsigned long n, int base);
-
+/**
+ * TODO: silinecek eğer kullanılmıyorsa
+ * ft_free - Dinamik olarak ayrılan belleği serbest bırakır
+ * @ptr: Serbest bırakılacak pointer'ın adresi
+ * Return: NULL yapar
+ */
+void	*ft_free(char **ptr)
+{
+	if (ptr && *ptr)
+	{
+		free(*ptr);
+		*ptr = NULL;
+	}
+	return (NULL);
+}
 /*
 ** ft_putchar_fd - Tek bir karakteri belirtilen file descriptor'a yazar
 ** @c: yazdırılacak karakter

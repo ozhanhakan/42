@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 14:05:41 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/13 14:06:39 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/15 15:25:02 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,20 +61,14 @@ int	ft_print_pointer(void *ptr)
 	char	*hex_str;
 
 	count = 0;
-	// NULL pointer kontrolü
 	if (!ptr)
 		return (ft_putstr_fd("(nil)", 1));
-	// "0x" prefix'ini yazdır
-	count += ft_putstr_fd("0x", 1);
-	
-	// Pointer'ı unsigned long'a cast et ve hex string'e çevir
+	count += ft_putstr_fd("0x", 1);	
 	hex_str = ft_itoa_base((unsigned long)ptr, "0123456789abcdef");
 	if (!hex_str)
 		return (-1);
-	
 	count += ft_putstr_fd(hex_str, 1);
-	free(hex_str);  // Bellek sızıntısını önle
-	
+	free(hex_str);
 	return (count);
 }
 
@@ -93,14 +87,11 @@ int	ft_print_decimal(int n)
 	char	*str;
 	int		count;
 
-	// Integer'ı string'e çevir
 	str = ft_itoa(n);
 	if (!str)
 		return (-1);
-	
 	count = ft_putstr_fd(str, 1);
-	free(str);  // Bellek sızıntısını önle
-	
+	free(str);
 	return (count);
 }
 
@@ -119,14 +110,11 @@ int	ft_print_unsigned(unsigned int n)
 	char	*str;
 	int		count;
 
-	// Unsigned integer'ı string'e çevir
 	str = ft_utoa(n);
 	if (!str)
 		return (-1);
-	
 	count = ft_putstr_fd(str, 1);
-	free(str);  // Bellek sızıntısını önle
-	
+	free(str);
 	return (count);
 }
 
@@ -145,14 +133,11 @@ int	ft_print_hex_lower(unsigned int n)
 	char	*str;
 	int		count;
 
-	// Sayıyı küçük harfli hex string'e çevir
 	str = ft_itoa_base(n, "0123456789abcdef");
 	if (!str)
 		return (-1);
-	
 	count = ft_putstr_fd(str, 1);
-	free(str);  // Bellek sızıntısını önle
-	
+	free(str);
 	return (count);
 }
 
@@ -171,14 +156,11 @@ int	ft_print_hex_upper(unsigned int n)
 	char	*str;
 	int		count;
 
-	// Sayıyı büyük harfli hex string'e çevir
 	str = ft_itoa_base(n, "0123456789ABCDEF");
 	if (!str)
 		return (-1);
-	
 	count = ft_putstr_fd(str, 1);
-	free(str);  // Bellek sızıntısını önle
-	
+	free(str);
 	return (count);
 }
 
