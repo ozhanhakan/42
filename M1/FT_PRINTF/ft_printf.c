@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 18:47:39 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/15 19:00:28 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/15 19:36:12 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,22 +59,16 @@ int	ft_parse_format(const char *format, va_list args)
 	while (format[i])
 	{
 		if (format[i] != '%')
-		{
 			ret = ft_putchar_fd(format[i], 1);
-			if (ret == -1)
-				return (-1);
-			count += ret;
-			i++;
-		}
 		else
 		{
 			i++;
 			ret = ft_handle_specifier(format[i], args);
-			if (ret == -1)
-				return (-1);
-			count += ret;
-			i++;
 		}
+		if (ret == -1)
+			return (-1);
+		count += ret;
+		i++;
 	}
 	return (count);
 }
