@@ -121,7 +121,9 @@ int ft_parse_format(const char *format, va_list args)
 {
 	int count;  // Toplam yazdırılan karakter sayısı
 	int i;      // Format string indeksi
+	int ret;
 
+	ret = 0;
 	count = 0;
 	i = 0;
 
@@ -129,7 +131,10 @@ int ft_parse_format(const char *format, va_list args)
 	while (format[i])
 	{
 		// % karakteri değilse, normal karakter olarak yazdır
-		int ret = 0;
+		// ft_putchar_fd: karakteri belirtilen dosya tanıtıcısına (1: STDOUT) yazdırır
+		// Hata kontrolü: Eğer yazma işlemi başarısız olursa hemen çık
+		// count değişkeni yazdırılan karakter sayısını tutar
+		// i indeksi format string'de ilerler
 		if (format[i] != '%')
 		{
 			ret = ft_putchar_fd(format[i], 1);  // STDOUT'a yazdır
