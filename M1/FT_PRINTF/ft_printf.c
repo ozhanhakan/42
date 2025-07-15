@@ -60,28 +60,12 @@
 */
 int	ft_printf(const char *format, ...)
 {
-	va_list	args;      // Argüman listesini tutacak değişken (aslında char* pointer)
-	int		count;     // Yazdırılan toplam karakter sayısı
+	va_list	args;
+	int		count;
 
-	// NULL format kontrolü - güvenlik için
 	if (!format)
-		return (-1);
-	
+		return (-1);	
 	count = 0;
-	
-	/*
-	** BELLEK ADIM 1: va_start(args, format)
-	** 
-	** Stack'te format parametresinden sonraki ilk argümanın adresini hesaplar:
-	** args = (char*)&format + sizeof(format)
-	** 
-	** Örnek: ft_printf("Test: %d", 42)
-	** Stack durumu:
-	** [Return Addr][format ptr][42] <- Stack
-	**                    ^      ^
-	**                    |      args buraya işaret eder
-	**                    format burası
-	*/
 	va_start(args, format);
 	
 	// Format string'i parse et ve yazdır

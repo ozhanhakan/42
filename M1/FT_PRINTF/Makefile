@@ -6,29 +6,27 @@
 #    By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/13 17:00:00 by hozhan            #+#    #+#              #
-#    Updated: 2025/07/13 14:00:56 by hozhan           ###   ########.fr        #
+#    Updated: 2025/07/15 17:11:49 by hozhan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# Library name - 42 standardına uygun
 NAME = libftprintf.a
 
-# Compiler and flags
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-# Archive tool for creating static library
 AR = ar rcs
 
-# Remove command
 RM = rm -f
 
 # Source files
 SRCS = ft_printf.c \
-       ft_printf_handlers.c \
-       ft_printf_utils.c
+       ft_printf_handlers_1.c \
+       ft_printf_handlers_2.c \
+       ft_printf_str_utils.c \
+	   ft_printf_num_utils.c 
 
-# Object files (source files'ın .o versiyonları)
+# Object files
 OBJS = $(SRCS:.c=.o)
 
 # Header file
