@@ -343,12 +343,6 @@ This is an educational project for 42 School. However, suggestions for improveme
 
 ## ⚠️ Important Notes
 
-### 42 School Compliance
-- ✅ Norminette compliant (42 coding standard)
-- ✅ No forbidden functions (only `write`, `malloc`, `free`, `va_*`)
-- ✅ Proper memory management (no leaks)
-- ✅ Error handling for all edge cases
-
 ### Limitations
 - No flag handling (`-`, `+`, `#`, ` `, `0`)
 - No width/precision specifiers
@@ -368,6 +362,3 @@ This project is part of 42 School curriculum. Code is provided for educational p
 
 ---
 
-**Made with ❤️ by [hozhan] for 42 School**
-
-*"The question isn't who is going to let me; it's who is going to stop me."* - Ayn Rand
