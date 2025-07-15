@@ -6,7 +6,7 @@
 /*   By: hozhan <hozhan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 17:20:23 by hozhan            #+#    #+#             */
-/*   Updated: 2025/07/15 17:20:43 by hozhan           ###   ########.fr       */
+/*   Updated: 2025/07/15 18:24:54 by hozhan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 int		ft_printf(const char *format, ...);
 int		ft_parse_format(const char *format, va_list args);
+int		ft_handle_specifier(char specifier, va_list args);
 
 int		ft_print_char(int c);
 int		ft_print_string(char *str);
