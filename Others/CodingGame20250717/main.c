@@ -3,111 +3,148 @@
 #include <string.h>
 #include <stdbool.h>
 
-// --- Ustanın Notu: Struct Tanımlamaları (Güncellendi) ---
-// Artık ajanların kime ait olduğunu bilmemiz gerekiyor. Bu yüzden AgentData yapısını kullanacağız.
-typedef struct {
-    int id;
-    int player; // 0 mı, 1 mi? Bu bilgi ajanın dost mu düşman mı olduğunu belirler.
-    // Bu görev için diğer bilgiler (cooldown, range vs.) şimdilik gereksiz.
+// --- Ustanın Notu: Struct Tanımlamaları (Veri Planlarımız) ---
+// Bu yapılar, farklı bilgileri düzenli kutularda saklamamızı sağlar.
+
+// AgentData: Ajanların oyun başında verilen ve değişmeyen kimlik bilgileri.
+typedef struct { 
+    int id;       // Ajanın benzersiz kimliği.
+    int player;   // Ajanın sahibi olan oyuncunun kimliği (Biz miyiz, düşman mı?).
 } AgentData;
 
-// Her tur değişen bilgileri tutmak için ayrı bir yapı.
-typedef struct {
-    int id;
-    int x;
-    int y;
-    int wetness; // Islaklık seviyesi, hedefimizi belirlemek için en önemli bilgi.
+// AgentState: Ajanların her tur değişen anlık durumları.
+typedef struct { 
+    int id;       // Ajanın kimliği.
+    int x, y;     // Ajanın haritadaki mevcut konumu.
 } AgentState;
+
+// Tile: Haritadaki tek bir karonun bilgileri.
+typedef struct { 
+    int x, y;     // Karonun konumu.
+    int type;     // Karonun türü (0:Boş, 1:Alçak Siper, 2:Yüksek Siper).
+} Tile;
+
+// --- Ustanın Notu: Global Değişkenler (Evrensel Bilgilerimiz) ---
+// Bu değişkenlere programın her yerinden erişebiliriz.
+int my_id;
+int width, height;
+// Haritanın kendisini saklamak için 2 boyutlu bir 'Tile' dizisi.
+// map[x][y] diyerek doğrudan o koordinattaki karonun bilgisine ulaşabiliriz.
+Tile map[20][10]; 
+
+// --- Ustanın Notu: Yardımcı Fonksiyon: Siper Seviyesi Hesaplama ---
+// Bu fonksiyon, kod tekrarını önleyen ve işi uzmanına yaptıran küçük bir alet gibidir.
+// Görevi: Verilen bir (x, y) konumunun etrafındaki siperleri kontrol edip,
+// o noktanın ne kadar korunaklı olduğunu söylemek.
+int get_cover_level_at(int x, int y) {
+    int best_cover = 0; // Başlangıçta hiç koruma yok varsayalım.
+    // Bitişikteki 4 karoyu kontrol et ve en yüksek siper değerini bul.
+    if (y > 0 && map[x][y - 1].type > best_cover) best_cover = map[x][y - 1].type;
+    if (y < height - 1 && map[x][y + 1].type > best_cover) best_cover = map[x][y + 1].type;
+    if (x > 0 && map[x - 1][y].type > best_cover) best_cover = map[x - 1][y].type;
+    if (x < width - 1 && map[x + 1][y].type > best_cover) best_cover = map[x + 1][y].type;
+    return best_cover; // Bulunan en iyi siper seviyesini döndür.
+}
 
 int main()
 {
-    // --- Ustanın Notu: Başlangıç Bilgilerini Okuma ve SAKLAMA ---
-    int my_id;
+    // --- Başlangıç Aşaması: Bilgileri Topla ve Hazırlan ---
     scanf("%d", &my_id);
-
     int agent_data_count;
     scanf("%d", &agent_data_count);
-
-    // Bütün ajanların temel bilgilerini saklamak için bir dizi oluşturalım.
     AgentData all_agent_data[agent_data_count];
     for (int i = 0; i < agent_data_count; i++) {
-        all_agent_data[i].id = i; // ID'yi doğrudan atayalım
         scanf("%d%d", &all_agent_data[i].id, &all_agent_data[i].player);
-        // Kalan gereksiz bilgileri okuyup geçelim.
-        int shoot_cooldown, optimal_range, soaking_power, splash_bombs;
-        scanf("%d%d%d%d", &shoot_cooldown, &optimal_range, &soaking_power, &splash_bombs);
+        int dummy[4]; // Gereksiz bilgileri okuyup atmak için geçici bir yer.
+        scanf("%d%d%d%d", &dummy[0], &dummy[1], &dummy[2], &dummy[3]);
     }
-
-    // Harita bilgilerini okuyup geçiyoruz, bu görevde ihtiyacımız yok.
-    int width, height;
     scanf("%d%d", &width, &height);
-    for (int i = 0; i < width * height; i++) {
-        int x, y, tile_type;
-        scanf("%d%d%d", &x, &y, &tile_type);
+    // Haritayı oku ve 'map' dizimize yerleştir. Bu, stratejimizin temelidir.
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            scanf("%d%d%d", &map[j][i].x, &map[j][i].y, &map[j][i].type);
+        }
     }
 
-    // --- Ustanın Notu: Oyun Döngüsü (Game Loop) ---
+    // --- Oyun Döngüsü: Karar ve Eylem ---
     while (1) {
         int agent_count;
         scanf("%d", &agent_count);
+        
+        AgentState my_agents[2];
+        AgentState enemy_agents[agent_count];
+        int my_agent_idx = 0;
+        int enemy_agent_idx = 0;
 
-        // Her turdaki ajan durumlarını saklamak için bir dizi.
-        AgentState current_states[agent_count];
+        // Gelen ajan verilerini oku ve dost/düşman olarak ayır.
         for (int i = 0; i < agent_count; i++) {
-            current_states[i].id = i; // ID'yi atayalım
-            scanf("%d%d%d", &current_states[i].id, &current_states[i].x, &current_states[i].y);
-            // Kalan gereksiz bilgileri okuyup geçelim.
-            int cooldown, splash_bombs;
-            scanf("%d%d%d", &cooldown, &splash_bombs, &current_states[i].wetness);
-        }
-
-        // --- Ustanın Notu: Hedef Belirleme Mekanizması ---
-        int target_id = -1;
-        int max_wetness = -1;
-
-        // Bütün ajanları kontrol et
-        for (int i = 0; i < agent_count; i++) {
-            int current_agent_id = current_states[i].id;
-            int current_agent_player = -1;
-
-            // Bu ajanın kime ait olduğunu bul (dost mu, düşman mı?)
-            for (int j = 0; j < agent_data_count; j++) {
-                if (all_agent_data[j].id == current_agent_id) {
-                    current_agent_player = all_agent_data[j].player;
+            int id, x, y, cooldown, splash_bombs, wetness;
+            scanf("%d%d%d%d%d%d", &id, &x, &y, &cooldown, &splash_bombs, &wetness);
+            bool is_mine = false;
+            for(int j = 0; j < agent_data_count; j++) {
+                if(all_agent_data[j].id == id && all_agent_data[j].player == my_id) {
+                    is_mine = true;
                     break;
                 }
             }
+            if (is_mine) {
+                my_agents[my_agent_idx++] = (AgentState){id, x, y};
+            } else {
+                enemy_agents[enemy_agent_idx++] = (AgentState){id, x, y};
+            }
+        }
 
-            // Eğer ajan düşmansa (player ID'si bizimkiyle aynı değilse)
-            if (current_agent_player != my_id) {
-                // Bu düşmanın ıslaklığı, şimdiye kadar gördüğümüz en yüksek ıslaklıktan fazla mı?
-                if (current_states[i].wetness > max_wetness) {
-                    // Evet, fazla. Yeni hedefimiz bu düşman.
-                    max_wetness = current_states[i].wetness;
-                    target_id = current_states[i].id;
+        int my_agent_count_input;
+        scanf("%d", &my_agent_count_input);
+
+        // --- Stratejinin Kalbi: Her Ajan İçin Ayrı Karar Mekanizması ---
+        for (int i = 0; i < my_agent_idx; i++) {
+            int current_x = my_agents[i].x;
+            int current_y = my_agents[i].y;
+            
+            // --- Adım 1: Bu ajan için en iyi HAREKET noktasını bul ---
+            int best_move_x = current_x;
+            int best_move_y = current_y;
+            int max_my_cover = -1;
+            int dx[] = {0, 0, 1, -1}; // Bitişikteki karelere gitmek için yönler
+            int dy[] = {1, -1, 0, 0};
+            for(int j = 0; j < 4; j++) {
+                int next_x = current_x + dx[j];
+                int next_y = current_y + dy[j];
+                // Gidilecek yer harita içinde ve boş bir karo mu?
+                if (next_x >= 0 && next_x < width && next_y >= 0 && next_y < height && map[next_x][next_y].type == 0) {
+                    int cover = get_cover_level_at(next_x, next_y);
+                    // Eğer bu hamle, şimdiye kadar bulduğumuzdan daha iyi bir siper sağlıyorsa...
+                    if (cover > max_my_cover) {
+                        max_my_cover = cover; // ...yeni en iyi siper seviyemiz bu olur.
+                        best_move_x = next_x; // ...ve yeni en iyi hareket hedefimiz bu kare olur.
+                        best_move_y = next_y;
+                    }
                 }
             }
-        }
 
-        // Bizim kontrolümüzdeki ajan sayısı okunur.
-        int my_agent_count;
-        scanf("%d", &my_agent_count);
-
-        // --- Ustanın Notu: Eylem Komutlarını Oluşturma ---
-        // Eğer bir hedef bulunduysa (yani oyunda en az bir düşman varsa)
-        if (target_id != -1) {
-            // Kendi ajanlarımızın her biri için aynı komutu ver.
-            for (int i = 0; i < my_agent_count; i++) {
-                // Çıktı formatı: "SHOOT <hedef_id>"
-                printf("SHOOT %d\n", target_id);
+            // --- Adım 2: Bu ajan için en zayıf BÖLGESEL düşmanı bul ---
+            int local_target_id = -1;
+            int min_enemy_cover = 3; // Mümkün olan en yüksek korumadan (2) daha büyük bir değerle başla.
+            for (int j = 0; j < enemy_agent_idx; j++) {
+                // Bu mantık, ajanın ve düşmanın haritanın aynı yarısında olup olmadığını kontrol eder.
+                bool same_side = (current_x < width / 2 && enemy_agents[j].x < width / 2) || // İkisi de solda mı?
+                                 (current_x >= width / 2 && enemy_agents[j].x >= width / 2); // VEYA ikisi de sağda mı?
+                
+                if (same_side) { // Eğer düşman, ajanın kendi bölgesindeyse...
+                    int cover = get_cover_level_at(enemy_agents[j].x, enemy_agents[j].y);
+                    // ...bu bölgesel düşmanın koruması, şimdiye kadar bulduğumuz en zayıfından daha mı az?
+                    if (cover < min_enemy_cover) {
+                        min_enemy_cover = cover; // Evet, yeni en zayıf bu.
+                        local_target_id = enemy_agents[j].id; // Hedefimiz bu ajan olsun.
+                    }
+                }
             }
-        } else {
-            // Eğer hiç düşman kalmadıysa, ne olur ne olmaz diye bekleme komutu verelim.
-            for (int i = 0; i < my_agent_count; i++) {
-                printf("HUNKER_DOWN\n");
-            }
+            
+            // --- Adım 3: Nihai Komutu Oluştur ve Yazdır ---
+            // Her ajanın kendi ID'si, kendi bulduğu en iyi HAREKET ve kendi bulduğu en zayıf HEDEF ile komut oluşturulur.
+            printf("%d;MOVE %d %d;SHOOT %d\n", my_agents[i].id, best_move_x, best_move_y, local_target_id);
         }
     }
-
     return 0;
 }
