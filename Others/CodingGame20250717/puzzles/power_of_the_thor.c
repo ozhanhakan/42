@@ -62,7 +62,19 @@ Thor was wounded during a previous battle against Fenrir, the wolf-god. During t
 
 Thor, who now feels very weak, must find and reach the light of power, as fast as possible, since it is the only thing which can restore his and Mjollnir's powers.
 */
-
+/*
+Çözümün Mantığı
+Başlangıç Değerlerini Oku: Program ilk olarak ışığın konumu (light_x, light_y) ve Thor'un başlangıç konumu (initial_tx, initial_ty) olmak üzere dört adet tam sayıyı okur.
+Konum Takibi: Thor'un mevcut konumunu takip etmek için initial_tx ve initial_ty değerlerini thor_x ve thor_y adında yeni değişkenlere atarız. Bu değişkenler her turda güncellenecektir.
+Sonsuz Döngü: Oyun, Thor ışığa ulaşana kadar devam ettiği için bir while(1) döngüsü kullanılır.
+Yön Belirleme: Her turda, Thor'un ışığa göre nerede olduğunu kontrol ederiz:
+Dikey Eksen (Y): Eğer Thor'un Y konumu (thor_y), ışığın Y konumundan (light_y) büyükse, Thor'un kuzeye (N) gitmesi gerekir. Küçükse, güneye (S) gitmesi gerekir. Eşitse, dikey hareket etmesine gerek yoktur.
+Yatay Eksen (X): Benzer şekilde, Thor'un X konumu (thor_x), ışığın X konumundan (light_x) büyükse, batıya (W) gitmesi gerekir. Küçükse, doğuya (E) gitmesi gerekir. Eşitse, yatay hareket etmesine gerek yoktur.
+Hareketi Birleştirme: Dikey ve yatay yönler birleştirilerek nihai hareket komutu oluşturulur (örneğin, "N" ve "W" birleşerek "NW" olur).
+Konumu Güncelleme: Thor'un hareket komutuna göre thor_x ve thor_y değişkenleri güncellenir. Bu, bir sonraki turda doğru karar verilmesini sağlar.
+Komutu Yazdırma: Oluşturulan hareket komutu ekrana yazdırılır.
+Bu strateji, Thor'un her adımda ışığa olan mesafeyi en verimli şekilde azaltmasını ve en kısa yoldan hedefe ulaşmasını sağlar.
+*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
