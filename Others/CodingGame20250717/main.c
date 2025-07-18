@@ -2,81 +2,143 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 
 // --- Ustanın Notu: Struct Tanımlamaları (Veri Planlarımız) ---
-// Bu yapılar, farklı bilgileri düzenli kutularda saklamamızı sağlar.
 
-// AgentData: Ajanların oyun başında verilen ve değişmeyen kimlik bilgileri.
-typedef struct { 
-    int id;       // Ajanın benzersiz kimliği.
-    int player;   // Ajanın sahibi olan oyuncunun kimliği (Biz miyiz, düşman mı?).
+typedef struct {
+    int id;
+    int player;
 } AgentData;
 
-// AgentState: Ajanların her tur değişen anlık durumları.
-typedef struct { 
-    int id;       // Ajanın kimliği.
-    int x, y;     // Ajanın haritadaki mevcut konumu.
+typedef struct {
+    int id;
+    int x, y;
+    int splash_bombs;
+    int last_x, last_y;
 } AgentState;
 
-// Tile: Haritadaki tek bir karonun bilgileri.
-typedef struct { 
-    int x, y;     // Karonun konumu.
-    int type;     // Karonun türü (0:Boş, 1:Alçak Siper, 2:Yüksek Siper).
+typedef struct {
+    int x, y;
+    int type;
 } Tile;
 
-// --- Ustanın Notu: Global Değişkenler (Evrensel Bilgilerimiz) ---
-// Bu değişkenlere programın her yerinden erişebiliriz.
+typedef struct {
+    int center_x, center_y;
+    int size;
+    bool contains_friend;
+} EnemyGroup;
+
+
+// --- Ustanın Notu: Global Değişkenler ---
 int my_id;
 int width, height;
-// Haritanın kendisini saklamak için 2 boyutlu bir 'Tile' dizisi.
-// map[x][y] diyerek doğrudan o koordinattaki karonun bilgisine ulaşabiliriz.
-Tile map[20][10]; 
+int turn_counter = 0;
+Tile map[20][10];
+AgentState previous_agents[2];
+int previous_agent_count = 0;
+int esir_agent_id = -1;
 
-// --- Ustanın Notu: Yardımcı Fonksiyon: Siper Seviyesi Hesaplama ---
-// Bu fonksiyon, kod tekrarını önleyen ve işi uzmanına yaptıran küçük bir alet gibidir.
-// Görevi: Verilen bir (x, y) konumunun etrafındaki siperleri kontrol edip,
-// o noktanın ne kadar korunaklı olduğunu söylemek.
-int get_cover_level_at(int x, int y) {
-    int best_cover = 0; // Başlangıçta hiç koruma yok varsayalım.
-    // Bitişikteki 4 karoyu kontrol et ve en yüksek siper değerini bul.
-    if (y > 0 && map[x][y - 1].type > best_cover) best_cover = map[x][y - 1].type;
-    if (y < height - 1 && map[x][y + 1].type > best_cover) best_cover = map[x][y + 1].type;
-    if (x > 0 && map[x - 1][y].type > best_cover) best_cover = map[x - 1][y].type;
-    if (x < width - 1 && map[x + 1][y].type > best_cover) best_cover = map[x + 1][y].type;
-    return best_cover; // Bulunan en iyi siper seviyesini döndür.
+
+// --- Ustanın Notu: Yardımcı Fonksiyonlar ---
+
+int get_manhattan_distance(int x1, int y1, int x2, int y2) {
+    return abs(x1 - x2) + abs(y1 - y2);
 }
 
-int main()
-{
-    // --- Başlangıç Aşaması: Bilgileri Topla ve Hazırlan ---
+int count_adjacent_walls(int x, int y) {
+    int wall_count = 0;
+    if (y <= 0 || map[x][y - 1].type != 0) wall_count++;
+    if (y >= height - 1 || map[x][y + 1].type != 0) wall_count++;
+    if (x <= 0 || map[x - 1][y].type != 0) wall_count++;
+    if (x >= width - 1 || map[x + 1][y].type != 0) wall_count++;
+    return wall_count;
+}
+
+int find_enemy_groups(AgentState enemy_agents[], int enemy_agent_count, AgentState my_agents[], int my_agent_count, EnemyGroup groups[]) {
+    int group_count = 0;
+    bool visited[enemy_agent_count];
+    for (int i = 0; i < enemy_agent_count; i++) {
+        visited[i] = false;
+    }
+
+    for (int i = 0; i < enemy_agent_count; i++) {
+        if (!visited[i]) {
+            EnemyGroup new_group = {0, 0, 0, false};
+            int total_x = 0;
+            int total_y = 0;
+            int member_count = 0;
+            
+            int queue[enemy_agent_count];
+            int queue_start = 0;
+            int queue_end = 0;
+            
+            queue[queue_end++] = i;
+            visited[i] = true;
+
+            while(queue_start < queue_end) {
+                int current_idx = queue[queue_start++];
+                member_count++;
+                total_x += enemy_agents[current_idx].x;
+                total_y += enemy_agents[current_idx].y;
+
+                for (int j = 0; j < enemy_agent_count; j++) {
+                    if (!visited[j]) {
+                        if (get_manhattan_distance(enemy_agents[current_idx].x, enemy_agents[current_idx].y, enemy_agents[j].x, enemy_agents[j].y) <= 4) {
+                            visited[j] = true;
+                            queue[queue_end++] = j;
+                        }
+                    }
+                }
+            }
+
+            new_group.size = member_count;
+            if (new_group.size > 0) {
+                // DÜZELTME: Tamsayı bölmesi yerine yuvarlama kullanarak daha hassas merkez hesabı yap.
+                new_group.center_x = round((float)total_x / new_group.size);
+                new_group.center_y = round((float)total_y / new_group.size);
+
+                for(int k=0; k < my_agent_count; k++) {
+                    if(get_manhattan_distance(my_agents[k].x, my_agents[k].y, new_group.center_x, new_group.center_y) <= 2) {
+                        new_group.contains_friend = true;
+                        break;
+                    }
+                }
+                groups[group_count++] = new_group;
+            }
+        }
+    }
+    return group_count;
+}
+
+
+int main() {
     scanf("%d", &my_id);
     int agent_data_count;
     scanf("%d", &agent_data_count);
     AgentData all_agent_data[agent_data_count];
     for (int i = 0; i < agent_data_count; i++) {
         scanf("%d%d", &all_agent_data[i].id, &all_agent_data[i].player);
-        int dummy[4]; // Gereksiz bilgileri okuyup atmak için geçici bir yer.
+        int dummy[4];
         scanf("%d%d%d%d", &dummy[0], &dummy[1], &dummy[2], &dummy[3]);
     }
     scanf("%d%d", &width, &height);
-    // Haritayı oku ve 'map' dizimize yerleştir. Bu, stratejimizin temelidir.
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             scanf("%d%d%d", &map[j][i].x, &map[j][i].y, &map[j][i].type);
         }
     }
 
-    // --- Oyun Döngüsü: Karar ve Eylem ---
     while (1) {
+        turn_counter++;
         int agent_count;
         scanf("%d", &agent_count);
         
         AgentState my_agents[2];
-        AgentState enemy_agents[agent_count];
+        AgentState enemy_agents[50];
         int my_agent_idx = 0;
         int enemy_agent_idx = 0;
 
-        // Gelen ajan verilerini oku ve dost/düşman olarak ayır.
         for (int i = 0; i < agent_count; i++) {
             int id, x, y, cooldown, splash_bombs, wetness;
             scanf("%d%d%d%d%d%d", &id, &x, &y, &cooldown, &splash_bombs, &wetness);
@@ -88,62 +150,159 @@ int main()
                 }
             }
             if (is_mine) {
-                my_agents[my_agent_idx++] = (AgentState){id, x, y};
+                my_agents[my_agent_idx] = (AgentState){id, x, y, splash_bombs, -1, -1};
+                for(int k = 0; k < previous_agent_count; k++) {
+                    if(previous_agents[k].id == id) {
+                        my_agents[my_agent_idx].last_x = previous_agents[k].x;
+                        my_agents[my_agent_idx].last_y = previous_agents[k].y;
+                        break;
+                    }
+                }
+                my_agent_idx++;
             } else {
-                enemy_agents[enemy_agent_idx++] = (AgentState){id, x, y};
+                enemy_agents[enemy_agent_idx++] = (AgentState){id, x, y, splash_bombs, -1, -1};
             }
         }
 
         int my_agent_count_input;
         scanf("%d", &my_agent_count_input);
 
-        // --- Stratejinin Kalbi: Her Ajan İçin Ayrı Karar Mekanizması ---
-        for (int i = 0; i < my_agent_idx; i++) {
-            int current_x = my_agents[i].x;
-            int current_y = my_agents[i].y;
-            
-            // --- Adım 1: Bu ajan için en iyi HAREKET noktasını bul ---
-            int best_move_x = current_x;
-            int best_move_y = current_y;
-            int max_my_cover = -1;
-            int dx[] = {0, 0, 1, -1}; // Bitişikteki karelere gitmek için yönler
-            int dy[] = {1, -1, 0, 0};
-            for(int j = 0; j < 4; j++) {
-                int next_x = current_x + dx[j];
-                int next_y = current_y + dy[j];
-                // Gidilecek yer harita içinde ve boş bir karo mu?
-                if (next_x >= 0 && next_x < width && next_y >= 0 && next_y < height && map[next_x][next_y].type == 0) {
-                    int cover = get_cover_level_at(next_x, next_y);
-                    // Eğer bu hamle, şimdiye kadar bulduğumuzdan daha iyi bir siper sağlıyorsa...
-                    if (cover > max_my_cover) {
-                        max_my_cover = cover; // ...yeni en iyi siper seviyemiz bu olur.
-                        best_move_x = next_x; // ...ve yeni en iyi hareket hedefimiz bu kare olur.
-                        best_move_y = next_y;
-                    }
-                }
-            }
+        if (turn_counter == 1 && my_agent_idx == 2) {
+            int walls1 = count_adjacent_walls(my_agents[0].x, my_agents[0].y);
+            int walls2 = count_adjacent_walls(my_agents[1].x, my_agents[1].y);
+            esir_agent_id = (walls1 > walls2) ? my_agents[0].id : my_agents[1].id;
+            fprintf(stderr, "Esir Ajan ID: %d olarak belirlendi.\n", esir_agent_id);
+        }
 
-            // --- Adım 2: Bu ajan için en zayıf BÖLGESEL düşmanı bul ---
-            int local_target_id = -1;
-            int min_enemy_cover = 3; // Mümkün olan en yüksek korumadan (2) daha büyük bir değerle başla.
-            for (int j = 0; j < enemy_agent_idx; j++) {
-                // Bu mantık, ajanın ve düşmanın haritanın aynı yarısında olup olmadığını kontrol eder.
-                bool same_side = (current_x < width / 2 && enemy_agents[j].x < width / 2) || // İkisi de solda mı?
-                                 (current_x >= width / 2 && enemy_agents[j].x >= width / 2); // VEYA ikisi de sağda mı?
-                
-                if (same_side) { // Eğer düşman, ajanın kendi bölgesindeyse...
-                    int cover = get_cover_level_at(enemy_agents[j].x, enemy_agents[j].y);
-                    // ...bu bölgesel düşmanın koruması, şimdiye kadar bulduğumuz en zayıfından daha mı az?
-                    if (cover < min_enemy_cover) {
-                        min_enemy_cover = cover; // Evet, yeni en zayıf bu.
-                        local_target_id = enemy_agents[j].id; // Hedefimiz bu ajan olsun.
+        EnemyGroup enemy_groups[50];
+        int group_count = find_enemy_groups(enemy_agents, enemy_agent_idx, my_agents, my_agent_idx, enemy_groups);
+        
+        fprintf(stderr, "Bulunan Düşman Grubu Sayısı: %d\n", group_count);
+        for(int i=0; i<group_count; i++) {
+            fprintf(stderr, "  Grup %d: Merkez(%d,%d), Boyut:%d, Dost Var Mı:%d\n", i, enemy_groups[i].center_x, enemy_groups[i].center_y, enemy_groups[i].size, enemy_groups[i].contains_friend);
+        }
+
+        for (int i = 0; i < my_agent_idx; i++) {
+            AgentState* agent = &my_agents[i];
+            char action_str[100] = "";
+
+            if (agent->id == esir_agent_id) {
+                fprintf(stderr, "Ajan %d (Esir) için karar veriliyor...\n", agent->id);
+                int best_move_x = 12;
+                int best_move_y = 1;
+
+                int best_throw_x = -1, best_throw_y = -1;
+                int max_group_size = 1;
+
+                if (agent->splash_bombs > 0) {
+                    for (int g = 0; g < group_count; g++) {
+                        if (enemy_groups[g].contains_friend) continue;
+                        if (get_manhattan_distance(agent->x, agent->y, enemy_groups[g].center_x, enemy_groups[g].center_y) > 4) continue;
+                        if (get_manhattan_distance(agent->x, agent->y, enemy_groups[g].center_x, enemy_groups[g].center_y) <= 1) continue;
+
+                        if (enemy_groups[g].size > max_group_size) {
+                            max_group_size = enemy_groups[g].size;
+                            best_throw_x = enemy_groups[g].center_x;
+                            best_throw_y = enemy_groups[g].center_y;
+                        }
                     }
                 }
+
+                if (best_throw_x != -1) {
+                    sprintf(action_str, "%d;MOVE %d %d;THROW %d %d", agent->id, best_move_x, best_move_y, best_throw_x, best_throw_y);
+                } else {
+                    sprintf(action_str, "%d;MOVE %d %d", agent->id, best_move_x, best_move_y);
+                }
+            } 
+            else {
+                fprintf(stderr, "Ajan %d (Serbest) için karar veriliyor...\n", agent->id);
+                int best_move_x = agent->x;
+                int best_move_y = agent->y;
+                int best_throw_x = -1, best_throw_y = -1;
+
+                int best_target_group_idx = -1;
+                int max_group_size = 1;
+                for (int g = 0; g < group_count; g++) {
+                    if (!enemy_groups[g].contains_friend && enemy_groups[g].size > max_group_size) {
+                        max_group_size = enemy_groups[g].size;
+                        best_target_group_idx = g;
+                    }
+                }
+
+                if (best_target_group_idx != -1) {
+                    EnemyGroup* target_group = &enemy_groups[best_target_group_idx];
+                    int target_x = target_group->center_x;
+                    int target_y = target_group->center_y;
+                    fprintf(stderr, "  Serbest ajan hedefi: Grup %d, Merkez(%d,%d)\n", best_target_group_idx, target_x, target_y);
+                    
+                    int best_throw_pos_x = -1, best_throw_pos_y = -1;
+                    int min_dist_to_throw_pos = 1000;
+
+                    // Hedefe hizalanacak en iyi atış pozisyonunu bul
+                    for(int k=1; k<=4; k++){
+                        int positions[4][2] = {{target_x, target_y-k}, {target_x, target_y+k}, {target_x-k, target_y}, {target_x+k, target_y}};
+                        for(int p=0; p<4; p++){
+                            int px = positions[p][0];
+                            int py = positions[p][1];
+                            if(px >= 0 && px < width && py >= 0 && py < height && map[px][py].type == 0){
+                                int dist = get_manhattan_distance(agent->x, agent->y, px, py);
+                                if(dist < min_dist_to_throw_pos){
+                                    min_dist_to_throw_pos = dist;
+                                    best_throw_pos_x = px;
+                                    best_throw_pos_y = py;
+                                }
+                            }
+                        }
+                    }
+
+                    if(best_throw_pos_x != -1){
+                        fprintf(stderr, "  En iyi atış pozisyonu: (%d,%d), Mesafe: %d\n", best_throw_pos_x, best_throw_pos_y, min_dist_to_throw_pos);
+                        best_move_x = best_throw_pos_x;
+                        best_move_y = best_throw_pos_y;
+                    }
+
+                    // Eğer hedefe hizalı ve menzildeyse bombayı at
+                    if (agent->splash_bombs > 0 && (agent->x == target_x || agent->y == target_y) && get_manhattan_distance(agent->x, agent->y, target_x, target_y) <= 4) {
+                        best_throw_x = target_x;
+                        best_throw_y = target_y;
+                    }
+                } else {
+                    best_move_x = width / 2;
+                    best_move_y = height / 2;
+                }
+
+                if (best_throw_x != -1) {
+                    sprintf(action_str, "%d;MOVE %d %d;THROW %d %d", agent->id, agent->x, agent->y, best_throw_x, best_throw_y);
+                } else {
+                    // Hedefe doğru sadece bir adım at
+                    int dx[] = {0, 0, 1, -1};
+                    int dy[] = {1, -1, 0, 0};
+                    int final_move_x = agent->x;
+                    int final_move_y = agent->y;
+                    int min_dist = get_manhattan_distance(agent->x, agent->y, best_move_x, best_move_y);
+
+                    for(int j=0; j<4; j++){
+                        int next_x = agent->x + dx[j];
+                        int next_y = agent->y + dy[j];
+                        bool is_backtrack = (next_x == agent->last_x && next_y == agent->last_y);
+                        if(next_x >= 0 && next_x < width && next_y >= 0 && next_y < height && map[next_x][next_y].type == 0 && !is_backtrack){
+                            int dist = get_manhattan_distance(next_x, next_y, best_move_x, best_move_y);
+                            if(dist < min_dist){
+                                min_dist = dist;
+                                final_move_x = next_x;
+                                final_move_y = next_y;
+                            }
+                        }
+                    }
+                    sprintf(action_str, "%d;MOVE %d %d", agent->id, final_move_x, final_move_y);
+                }
             }
-            
-            // --- Adım 3: Nihai Komutu Oluştur ve Yazdır ---
-            // Her ajanın kendi ID'si, kendi bulduğu en iyi HAREKET ve kendi bulduğu en zayıf HEDEF ile komut oluşturulur.
-            printf("%d;MOVE %d %d;SHOOT %d\n", my_agents[i].id, best_move_x, best_move_y, local_target_id);
+            printf("%s\n", action_str);
+        }
+        
+        previous_agent_count = my_agent_idx;
+        for(int i = 0; i < my_agent_idx; i++) {
+            previous_agents[i] = my_agents[i];
         }
     }
     return 0;
