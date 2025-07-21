@@ -17,6 +17,8 @@
 #include <stdbool.h>
 #include <limits.h>
 
+// ==================== OYUN YAPISI ====================
+
 #define MAX_AGENTS 20    ///< Maksimum ajan sayısı
 #define MAX_WIDTH  20    ///< Harita genişlik limiti
 #define MAX_HEIGHT 20    ///< Harita yükseklik limiti
@@ -249,6 +251,121 @@ Agent get_agent_by_id(int id) {
 /**
  * @brief Ana oyun döngüsü
  */
+
+
+
+ // ==================== TEST SİSTEMİ ====================
+#ifdef LOCAL_TESTING
+
+// ==================== STRATEJİ TEST FONKSİYONLARI ====================
+void get_move(Agent a, int* x, int* y) {
+    // Gerçek stratejiniz burada
+    *x = (a.x + 1) % MAX_WIDTH; // Örnek: Sağa hareket
+    *y = a.y;
+}
+
+
+void setup_test_scenario1() {
+    printf("=== Senaryo 1: Temel Hareket ===\n");
+    grid_width = 3; grid_height = 3;
+    
+    // Haritayı sıfırla
+    for (int x = 0; x < grid_width; x++) {
+        for (int y = 0; y < grid_height; y++) {
+            tile_type[x][y] = EMPTY;
+        }
+    }
+    
+    // Özel karolar
+    tile_type[1][0] = HIGH_COVER;
+    tile_type[2][2] = LOW_COVER;
+    
+    // Ajanları yerleştir
+    agents[0] = (Agent){1, 0, 0, 0, 0, 0, 0}; // Bizim ajan
+    agents[1] = (Agent){2, 1, 2, 2, 0, 0, 0}; // Düşman
+    agent_count = 2; my_agent_count = 1; my_id = 0;
+}
+
+void setup_test_scenario2() {
+    printf("\n=== Senaryo 2: İkili Düşman ===\n");
+    grid_width = 4; grid_height = 2;
+    
+    // Harita reset
+    for (int x = 0; x < grid_width; x++) {
+        for (int y = 0; y < grid_height; y++) {
+            tile_type[x][y] = EMPTY;
+        }
+    }
+    
+    // Özel karolar
+    tile_type[1][0] = HIGH_COVER;
+    tile_type[3][0] = LOW_COVER;
+    
+    // Ajanlar
+    agents[0] = (Agent){1, 0, 0, 0, 0, 0, 0}; // Biz
+    agents[1] = (Agent){2, 1, 2, 0, 0, 0, 0}; // Düşman 1
+    agents[2] = (Agent){3, 1, 3, 1, 0, 0, 0};  // Düşman 2
+    agent_count = 3; my_agent_count = 1; my_id = 0;
+}
+
+void setup_test_scenario3() {
+    printf("\n=== Senaryo 3: Engel Durumu ===\n");
+    grid_width = 5; grid_height = 1;
+    
+    // Tümü boş
+    for (int x = 0; x < grid_width; x++) {
+        tile_type[x][0] = EMPTY;
+    }
+    
+    // Engel
+    tile_type[2][0] = HIGH_COVER;
+    
+    // Ajanlar
+    agents[0] = (Agent){1, 0, 0, 0, 0, 0, 0}; // Biz
+    agents[1] = (Agent){2, 1, 4, 0, 0, 0, 0}; // Düşman
+    agent_count = 2; my_agent_count = 1; my_id = 0;
+}
+
+
+void run_test(Agent* a) {
+    int mx, my;
+    get_optimal_cover_position(*a, &mx, &my);
+    printf("Move to: (%d,%d)\n", mx, my);
+    
+    int target = select_most_vulnerable_enemy(*a);
+    printf("Shoot target: %d\n", target);
+}
+
+void test_cover_logic() {
+    printf("=== TEST 1: test_cover_logic Hareket Doğruluğu ===\n");
+    Agent test_agent = {1, 5, 5, 0};
+    int x, y;
+    get_move(test_agent, &x, &y);
+    printf("Agent %d -> (%d,%d) %s\n", 
+           test_agent.id, x, y, 
+           (x == 6 && y == 5) ? "✅" : "❌");
+}
+
+void run_all_tests() {
+    test_cover_logic();
+
+    setup_test_scenario1();
+    setup_test_scenario2();
+    setup_test_scenario3();
+
+    // Diğer testler...
+}
+
+int main() {
+    printf("===== TEST MODU-all =====\n");
+
+	run_all_tests();
+    return 0;
+}
+
+#else
+// ==================== CODINGAME MAIN ====================
+
 int main() {
     // Giriş verilerini oku
     scanf("%d", &my_id);
@@ -287,3 +404,4 @@ int main() {
 
     return 0;
 }
+#endif
