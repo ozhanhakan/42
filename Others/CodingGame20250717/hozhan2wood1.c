@@ -1,45 +1,64 @@
-//wood1 completed
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
-#include <limits.h>
 #include <string.h>
 
-#define MAX_AGENTS 30
-#define MAX_WIDTH 20
-#define MAX_HEIGHT 10
-#define BOMB_RANGE 4
-#define MAX_ENEMY_GROUPS 3
+#define MAX_SIZE 30  // Maksimum harita boyutu
+#define MAX_GROUPS 3
+#define MAX_AGENTS 100
+#define BOMB_RANGE 3  // Gerçek menzil değeri
 
 typedef struct {
-    int id, player, x, y;
-    int splashBombs;
-    bool has_thrown_bomb;
-    int bomb_target_x, bomb_target_y;
+    int id;
+    int x, y;
+    int bombs;
+    bool is_mine;
+    int stuck_count;
+    int last_x, last_y;
 } Agent;
 
 typedef struct {
     int x, y;
-    bool destroyed;
-    bool already_bombed;
-    bool initialized;
-} EnemyGroup;
+    bool bombed;
+    int enemy_count;
+} Group;
 
+// Global değişkenler
 int width, height;
-int tile_type[MAX_WIDTH][MAX_HEIGHT];
+int my_id;
+int grid[MAX_SIZE][MAX_SIZE];
 Agent agents[MAX_AGENTS];
-int agent_count, my_agent_count, my_id;
-EnemyGroup enemy_groups[MAX_ENEMY_GROUPS] = {{0}};
-int current_group_index = 0;
+int agent_count = 0;
+int my_agent_count = 0;
+Group groups[MAX_GROUPS];
 bool groups_initialized = false;
 
-bool is_valid_position(int x, int y) {
-    return x >= 0 && x < width && y >= 0 && y < height && tile_type[x][y] == 0;
+// Yardımcı fonksiyonlar
+bool is_valid(int x, int y) {
+    return x >= 0 && x < width && y >= 0 && y < height && grid[x][y] == 0;
 }
 
-bool has_friendly_fire(int x, int y) {
+int manhattan_distance(int x1, int y1, int x2, int y2) {
+    return abs(x1 - x2) + abs(y1 - y2);
+}
+
+int count_enemies(int x, int y) {
+    if (x < 0 || x >= width || y < 0 || y >= height) return 0;
+    
+    int count = 0;
     for (int i = 0; i < agent_count; i++) {
-        if (agents[i].player == my_id && 
+        if (!agents[i].is_mine && 
+            abs(agents[i].x - x) <= 1 && 
+            abs(agents[i].y - y) <= 1) {
+            count++;
+        }
+    }
+    return count;
+}
+
+bool has_friendly(int x, int y) {
+    for (int i = 0; i < agent_count; i++) {
+        if (agents[i].is_mine && 
             abs(agents[i].x - x) <= 1 && 
             abs(agents[i].y - y) <= 1) {
             return true;
@@ -48,67 +67,55 @@ bool has_friendly_fire(int x, int y) {
     return false;
 }
 
-// Düşman sayısını hesapla
-int count_enemies_in_group(int center_x, int center_y) {
-    int count = 0;
-    for (int i = 0; i < agent_count; i++) {
-        if (agents[i].player != my_id && 
-            abs(agents[i].x - center_x) <= 1 && 
-            abs(agents[i].y - center_y) <= 1) {
-            count++;
-        }
-    }
-    return count;
-}
-
-// Başlangıçtaki düşman gruplarını bul
-void initialize_enemy_groups() {
-    fprintf(stderr, "Initializing enemy groups...\n");
+// Düşman gruplarını bul
+void find_enemy_groups() {
+    fprintf(stderr, "Finding enemy groups...\n");
     
-    // Düşman haritasını oluştur
-    bool enemy_map[MAX_WIDTH][MAX_HEIGHT] = {false};
-    int density[MAX_WIDTH][MAX_HEIGHT] = {0};
-    
-    for (int i = 0; i < agent_count; i++) {
-        if (agents[i].player != my_id) {
-            if (agents[i].x >= 0 && agents[i].x < width && 
-                agents[i].y >= 0 && agents[i].y < height) {
-                enemy_map[agents[i].x][agents[i].y] = true;
-            }
-        }
+    // Grupları sıfırla
+    for (int i = 0; i < MAX_GROUPS; i++) {
+        groups[i].x = -1;
+        groups[i].y = -1;
+        groups[i].bombed = false;
+        groups[i].enemy_count = 0;
     }
-
+    
     // Düşman yoğunluğunu hesapla
-    for (int x = 1; x < width-1; x++) {
-        for (int y = 1; y < height-1; y++) {
+    int density[MAX_SIZE][MAX_SIZE] = {0};
+    
+    for (int i = 0; i < agent_count; i++) {
+        if (!agents[i].is_mine) {
+            // Bu düşmanın etrafındaki karelerin yoğunluğunu artır
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dy = -1; dy <= 1; dy++) {
-                    if (enemy_map[x+dx][y+dy]) {
-                        density[x][y]++;
+                    int nx = agents[i].x + dx;
+                    int ny = agents[i].y + dy;
+                    if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                        density[nx][ny]++;
                     }
                 }
             }
         }
     }
-
-    // En yoğun 3 noktayı bul
-    for (int g = 0; g < MAX_ENEMY_GROUPS; g++) {
-        int max_density = 0;
-        int best_x = -1, best_y = -1;
+    
+    // En yoğun grupları bul
+    for (int g = 0; g < MAX_GROUPS; g++) {
+        int best_x = -1, best_y = -1, max_density = 0;
         
-        for (int x = 1; x < width-1; x++) {
-            for (int y = 1; y < height-1; y++) {
-                if (density[x][y] > max_density && !has_friendly_fire(x,y)) {
-                    bool already_targeted = false;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (density[x][y] > max_density && !has_friendly(x, y)) {
+                    // Önceki gruplarla çakışma kontrolü
+                    bool overlap = false;
                     for (int i = 0; i < g; i++) {
-                        if (enemy_groups[i].initialized && 
-                            abs(enemy_groups[i].x - x) < 3 && abs(enemy_groups[i].y - y) < 3) {
-                            already_targeted = true;
+                        if (groups[i].x != -1 && 
+                            abs(groups[i].x - x) < 3 && 
+                            abs(groups[i].y - y) < 3) {
+                            overlap = true;
                             break;
                         }
                     }
                     
-                    if (!already_targeted) {
+                    if (!overlap) {
                         max_density = density[x][y];
                         best_x = x;
                         best_y = y;
@@ -118,14 +125,13 @@ void initialize_enemy_groups() {
         }
         
         if (best_x != -1) {
-            enemy_groups[g].x = best_x;
-            enemy_groups[g].y = best_y;
-            enemy_groups[g].destroyed = false;
-            enemy_groups[g].already_bombed = false;
-            enemy_groups[g].initialized = true;
+            groups[g].x = best_x;
+            groups[g].y = best_y;
+            groups[g].bombed = false;
+            groups[g].enemy_count = count_enemies(best_x, best_y);
             
-            fprintf(stderr, "Enemy group %d found at (%d,%d) with density %d\n", 
-                   g, best_x, best_y, max_density);
+            fprintf(stderr, "Group %d found at (%d,%d) with density %d and %d enemies\n", 
+                   g, best_x, best_y, max_density, groups[g].enemy_count);
             
             // Bu bölgeyi temizle
             for (int dx = -2; dx <= 2; dx++) {
@@ -137,331 +143,281 @@ void initialize_enemy_groups() {
                     }
                 }
             }
+        } else {
+            fprintf(stderr, "No valid group %d found\n", g);
         }
     }
     
     groups_initialized = true;
 }
-// update_enemy_groups() fonksiyonunda şu kısmı değiştirin
-void update_enemy_groups() {
-    // Bomba atılan grupları kontrol et
+
+// Her ajan için en iyi hedefi bul
+void assign_targets(int* agent_targets) {
     for (int i = 0; i < agent_count; i++) {
-        if (agents[i].player == my_id && agents[i].has_thrown_bomb) {
-            int bomb_x = agents[i].bomb_target_x;
-            int bomb_y = agents[i].bomb_target_y;
+        if (!agents[i].is_mine) continue;
+        
+        int best_target = -1;
+        int min_dist = 1000;
+        
+        // Bombalanmamış gruplar arasından en yakın olanı seç
+        for (int g = 0; g < MAX_GROUPS; g++) {
+            if (groups[g].x == -1 || groups[g].bombed) continue;
             
-            // DEBUG: Bomba atılan bölgedeki düşmanları kontrol et
-            int enemies_at_target = count_enemies_in_group(bomb_x, bomb_y);
-            fprintf(stderr, "DEBUG: Bomba atılan konum (%d,%d)'de %d düşman var\n", 
-                   bomb_x, bomb_y, enemies_at_target);
-            
-            // Hedef grubu bul
-            for (int g = 0; g < MAX_ENEMY_GROUPS; g++) {
-                if (enemy_groups[g].initialized && 
-                    enemy_groups[g].x == bomb_x && 
-                    enemy_groups[g].y == bomb_y) {
-                    
-                    // Bu gruba bomba atıldı olarak işaretle
-                    enemy_groups[g].already_bombed = true;
-                    enemy_groups[g].destroyed = true;
-                    
-                    fprintf(stderr, "Group %d at (%d,%d) marked as DESTROYED after bomb hit!\n", 
-                          g, enemy_groups[g].x, enemy_groups[g].y);
+            int dist = manhattan_distance(agents[i].x, agents[i].y, groups[g].x, groups[g].y);
+            if (dist < min_dist) {
+                min_dist = dist;
+                best_target = g;
+            }
+        }
+        
+        // Hiç bombalanmamış grup kalmadıysa, en yakın grubu seç
+        if (best_target == -1) {
+            for (int g = 0; g < MAX_GROUPS; g++) {
+                if (groups[g].x == -1) continue;
+                
+                int dist = manhattan_distance(agents[i].x, agents[i].y, groups[g].x, groups[g].y);
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    best_target = g;
                 }
             }
-            
-            // Bomba atma durumunu sıfırla
-            agents[i].has_thrown_bomb = false;
         }
+        
+        agent_targets[i] = best_target;
     }
-    
-    // ÖNEMLİ: Bu kısmı kaldırıyoruz veya devre dışı bırakıyoruz!
-    // Gruplar sadece bombalandığında "destroyed" olacak
-    // Düşman sayısı 0 olsa bile grupları destroyed olarak işaretlememeliyiz
-    
-    /* 
-    // Grupların mevcut durumunu kontrol et - BU KISMI KALDIRIYORUZ
-    for (int g = 0; g < MAX_ENEMY_GROUPS; g++) {
-        if (enemy_groups[g].initialized && !enemy_groups[g].destroyed) {
-            int enemies = count_enemies_in_group(enemy_groups[g].x, enemy_groups[g].y);
-            fprintf(stderr, "DEBUG: Group %d at (%d,%d) has %d enemies\n", 
-                   g, enemy_groups[g].x, enemy_groups[g].y, enemies);
-                   
-            if (enemies == 0) {
-                enemy_groups[g].destroyed = true;
-                fprintf(stderr, "Group %d at (%d,%d) confirmed DESTROYED by enemy count!\n", 
-                      g, enemy_groups[g].x, enemy_groups[g].y);
-            }
-        }
-    }
-    */
-    
-    // Bunun yerine, sadece düşman sayısını raporlayalım
-    for (int g = 0; g < MAX_ENEMY_GROUPS; g++) {
-        if (enemy_groups[g].initialized && !enemy_groups[g].destroyed) {
-            int enemies = count_enemies_in_group(enemy_groups[g].x, enemy_groups[g].y);
-            fprintf(stderr, "DEBUG: Group %d at (%d,%d) has %d enemies\n", 
-                   g, enemy_groups[g].x, enemy_groups[g].y, enemies);
-        }
-    }
-    
-    // Grupların durumunu raporla
-    int active_count = 0;
-    fprintf(stderr, "Groups status: ");
-    for (int g = 0; g < MAX_ENEMY_GROUPS; g++) {
-        if (enemy_groups[g].initialized) {
-            fprintf(stderr, "[G%d:(%d,%d):%s:%s] ", 
-                  g, enemy_groups[g].x, enemy_groups[g].y,
-                  enemy_groups[g].destroyed ? "destroyed" : "active",
-                  enemy_groups[g].already_bombed ? "bombed" : "not_bombed");
-            
-            if (!enemy_groups[g].destroyed) {
-                active_count++;
-            }
-        }
-        else {
-            fprintf(stderr, "[G%d:not_initialized] ", g);
-        }
-    }
-    fprintf(stderr, "\nActive groups: %d\n", active_count);
 }
 
-void move_to_target(Agent a, int target_x, int target_y, int* mx, int* my) {
-    int dx = (target_x > a.x) ? 1 : (target_x < a.x) ? -1 : 0;
-    int dy = (target_y > a.y) ? 1 : (target_y < a.y) ? -1 : 0;
-
-    if (dx != 0 && is_valid_position(a.x + dx, a.y)) {
-        *mx = a.x + dx;
-        *my = a.y;
-        return;
-    }
-    if (dy != 0 && is_valid_position(a.x, a.y + dy)) {
-        *mx = a.x;
-        *my = a.y + dy;
-        return;
-    }
-
-    int directions[4][2] = {{1,0}, {0,1}, {-1,0}, {0,-1}};
-    for (int i = 0; i < 4; i++) {
-        int nx = a.x + directions[i][0];
-        int ny = a.y + directions[i][1];
-        if (is_valid_position(nx, ny)) {
-            *mx = nx;
-            *my = ny;
-            return;
-        }
-    }
-
-    *mx = a.x;
-    *my = a.y;
-}
-
-void update_current_target() {
-    // Öncelikli hedefi seç (yok edilmemiş, bombalanmamış ve geçerli olan)
-    current_group_index = -1;
-    for (int i = 0; i < MAX_ENEMY_GROUPS; i++) {
-        if (enemy_groups[i].initialized && !enemy_groups[i].destroyed && !enemy_groups[i].already_bombed) {
-            current_group_index = i;
-            break;
-        }
-    }
+// İyileştirilmiş hareket algoritması
+void move_to(Agent* agent, int tx, int ty, int* mx, int* my) {
+    // Önceki konumu kaydet (takılma tespiti için)
+    agent->last_x = agent->x;
+    agent->last_y = agent->y;
     
-    // Eğer bombalanmamış grup yoksa, yok edilmemiş herhangi bir grup seç
-    if (current_group_index == -1) {
-        for (int i = 0; i < MAX_ENEMY_GROUPS; i++) {
-            if (enemy_groups[i].initialized && !enemy_groups[i].destroyed) {
-                current_group_index = i;
-                break;
-            }
-        }
-    }
+    // Hedefe yönelme vektörü
+    int dx = tx > agent->x ? 1 : (tx < agent->x ? -1 : 0);
+    int dy = ty > agent->y ? 1 : (ty < agent->y ? -1 : 0);
     
-    if (current_group_index == -1) {
-        fprintf(stderr, "WARNING: No valid targets found!\n");
+    // Hedefe mesafe
+    int dist_x = abs(tx - agent->x);
+    int dist_y = abs(ty - agent->y);
+    
+    // X veya Y ekseninde öncelik belirle
+    bool x_priority = dist_x > dist_y;
+    
+    // Takılmayı önlemek için hamle seçenekleri
+    int options[4][2];
+    int option_count = 0;
+    
+    // Hedefe doğru tercih edilen hamleler
+    if (x_priority) {
+        if (dx != 0 && is_valid(agent->x + dx, agent->y))
+            options[option_count][0] = agent->x + dx, options[option_count++][1] = agent->y;
+        if (dy != 0 && is_valid(agent->x, agent->y + dy))
+            options[option_count][0] = agent->x, options[option_count++][1] = agent->y + dy;
     } else {
-        fprintf(stderr, "Current target is group %d at (%d,%d) %s\n", 
-               current_group_index, 
-               enemy_groups[current_group_index].x, 
-               enemy_groups[current_group_index].y,
-               enemy_groups[current_group_index].already_bombed ? "(already bombed)" : "");
+        if (dy != 0 && is_valid(agent->x, agent->y + dy))
+            options[option_count][0] = agent->x, options[option_count++][1] = agent->y + dy;
+        if (dx != 0 && is_valid(agent->x + dx, agent->y))
+            options[option_count][0] = agent->x + dx, options[option_count++][1] = agent->y;
+    }
+    
+    // Alternatif yönler
+    int dirs[4][2] = {{1,0}, {0,1}, {-1,0}, {0,-1}};
+    for (int i = 0; i < 4; i++) {
+        int nx = agent->x + dirs[i][0];
+        int ny = agent->y + dirs[i][1];
+        if (is_valid(nx, ny)) {
+            // Önceki konuma geri dönmemeye çalış (eğer takıldıysa)
+            if (agent->stuck_count < 3 || !(nx == agent->last_x && ny == agent->last_y)) {
+                options[option_count][0] = nx;
+                options[option_count++][1] = ny;
+            }
+        }
+    }
+    
+    // En iyi seçeneği bul
+    if (option_count > 0) {
+        int best_opt = 0;
+        int min_opt_dist = 1000;
+        
+        for (int i = 0; i < option_count; i++) {
+            int d = manhattan_distance(options[i][0], options[i][1], tx, ty);
+            if (d < min_opt_dist) {
+                min_opt_dist = d;
+                best_opt = i;
+            }
+        }
+        
+        *mx = options[best_opt][0];
+        *my = options[best_opt][1];
+    } else {
+        // Hareket edemiyorsa yerinde kal
+        *mx = agent->x;
+        *my = agent->y;
+    }
+    
+    // Takılma durumunu güncelle
+    if (*mx == agent->x && *my == agent->y) {
+        agent->stuck_count++;
+        fprintf(stderr, "Agent %d stuck at (%d,%d) for %d turns\n", 
+               agent->id, agent->x, agent->y, agent->stuck_count);
+    } else if (*mx == agent->last_x && *my == agent->last_y) {
+        agent->stuck_count++;
+        fprintf(stderr, "Agent %d going back and forth between (%d,%d) and (%d,%d) for %d turns\n",
+               agent->id, agent->last_x, agent->last_y, agent->x, agent->y, agent->stuck_count);
+    } else {
+        agent->stuck_count = 0;
     }
 }
 
-void assign_targets() {
-    bool assigned[MAX_AGENTS] = {false};
+// Oyun stratejisini uygula
+void execute_turn() {
+    // İlk turda düşman gruplarını bul
+    if (!groups_initialized) {
+        find_enemy_groups();
+    }
     
-    if (current_group_index >= 0 && current_group_index < MAX_ENEMY_GROUPS && 
-        enemy_groups[current_group_index].initialized && 
-        !enemy_groups[current_group_index].destroyed) {
-        
-        EnemyGroup target = enemy_groups[current_group_index];
-        int best_agent = -1;
-        int min_dist = INT_MAX;
-        
-        // Ana hedefe en yakın ajanı bul
-        for (int i = 0; i < agent_count; i++) {
-            if (agents[i].player == my_id && !assigned[i] && agents[i].id != 0) {
-                int dist = abs(agents[i].x - target.x) + abs(agents[i].y - target.y);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    best_agent = i;
-                }
-            }
-        }
-        
-        if (best_agent != -1) {
-            assigned[best_agent] = true;
-            Agent* a = &agents[best_agent];
-            int dist = abs(a->x - target.x) + abs(a->y - target.y);
-            
-            if (dist <= BOMB_RANGE && a->splashBombs > 0 && !target.already_bombed) {
-                // Bomba at - ama sadece önceden bombalanmamışsa
-                a->has_thrown_bomb = true;
-                a->bomb_target_x = target.x;
-                a->bomb_target_y = target.y;
-                
-                printf("%d;THROW %d %d;MESSAGE Bombing G%d\n", 
-                      a->id, target.x, target.y, current_group_index);
-            } else {
-                // Hareket et
-                int mx, my;
-                move_to_target(*a, target.x, target.y, &mx, &my);
-                
-                // Eğer grup bombalandıysa, bunu belirt
-                if (target.already_bombed) {
-                    printf("%d;MOVE %d %d;MESSAGE G%d already bombed\n", 
-                          a->id, mx, my, current_group_index);
-                } else {
-                    printf("%d;MOVE %d %d;MESSAGE Moving to G%d\n", 
-                          a->id, mx, my, current_group_index);
-                }
-            }
+    // Grupları güncelle
+    for (int i = 0; i < MAX_GROUPS; i++) {
+        if (groups[i].x != -1) {
+            groups[i].enemy_count = count_enemies(groups[i].x, groups[i].y);
         }
     }
     
-    // Diğer gruplar için ajanlar ata
-    for (int g = 0; g < MAX_ENEMY_GROUPS; g++) {
-        if (g == current_group_index || !enemy_groups[g].initialized || enemy_groups[g].destroyed) 
-            continue;
-        
-        int best_agent = -1;
-        int min_dist = INT_MAX;
-        
-        for (int i = 0; i < agent_count; i++) {
-            if (agents[i].player == my_id && !assigned[i] && agents[i].id != 0) {
-                int dist = abs(agents[i].x - enemy_groups[g].x) + 
-                           abs(agents[i].y - enemy_groups[g].y);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    best_agent = i;
-                }
-            }
-        }
-        
-        if (best_agent != -1) {
-            assigned[best_agent] = true;
-            Agent* a = &agents[best_agent];
-            int dist = abs(a->x - enemy_groups[g].x) + abs(a->y - enemy_groups[g].y);
-            
-            if (dist <= BOMB_RANGE && a->splashBombs > 0 && !enemy_groups[g].already_bombed) {
-                // Bomba at - ama sadece önceden bombalanmamışsa
-                a->has_thrown_bomb = true;
-                a->bomb_target_x = enemy_groups[g].x;
-                a->bomb_target_y = enemy_groups[g].y;
-                
-                printf("%d;THROW %d %d;MESSAGE Bombing G%d\n", 
-                      a->id, enemy_groups[g].x, enemy_groups[g].y, g);
-            } else {
-                int mx, my;
-                move_to_target(*a, enemy_groups[g].x, enemy_groups[g].y, &mx, &my);
-                
-                // Eğer grup bombalandıysa, bunu belirt
-                if (enemy_groups[g].already_bombed) {
-                    printf("%d;MOVE %d %d;MESSAGE G%d already bombed\n", 
-                          a->id, mx, my, g);
-                } else {
-                    printf("%d;MOVE %d %d;MESSAGE Moving to G%d\n", 
-                          a->id, mx, my, g);
-                }
-            }
+    // Grupları raporla
+    fprintf(stderr, "Groups: ");
+    for (int i = 0; i < MAX_GROUPS; i++) {
+        if (groups[i].x != -1) {
+            fprintf(stderr, "[G%d:(%d,%d):%d enemies:%s] ", 
+                  i, groups[i].x, groups[i].y, groups[i].enemy_count,
+                  groups[i].bombed ? "bombed" : "not_bombed");
+        } else {
+            fprintf(stderr, "[G%d:invalid] ", i);
         }
     }
+    fprintf(stderr, "\n");
     
-    // Kalan ajanları merkeze yönlendir
+    // Ajanları raporla
+    fprintf(stderr, "My agents: ");
     for (int i = 0; i < agent_count; i++) {
-        if (agents[i].player == my_id && !assigned[i] && agents[i].id != 0) {
+        if (agents[i].is_mine) {
+            fprintf(stderr, "[ID:%d at (%d,%d) with %d bombs] ", 
+                  agents[i].id, agents[i].x, agents[i].y, agents[i].bombs);
+        }
+    }
+    fprintf(stderr, "\n");
+    
+    // Her ajan için hedef belirle
+    int agent_targets[MAX_AGENTS];
+    assign_targets(agent_targets);
+    
+    // Ajanları hedeflerine göre yönlendir
+    for (int i = 0; i < agent_count; i++) {
+        if (!agents[i].is_mine) continue;
+        
+        int target = agent_targets[i];
+        if (target == -1) {
+            // Hedef yoksa merkeze git
             int mx, my;
-            move_to_target(agents[i], width/2, height/2, &mx, &my);
-            printf("%d;MOVE %d %d;MESSAGE Patrolling\n", agents[i].id, mx, my);
+            move_to(&agents[i], width/2, height/2, &mx, &my);
+            printf("%d;MOVE %d %d;MESSAGE Patrolling center\n", 
+                  agents[i].id, mx, my);
+            continue;
+        }
+        
+        // Hedef var, bomba atabilir miyiz?
+        int dist = manhattan_distance(agents[i].x, agents[i].y, 
+                                     groups[target].x, groups[target].y);
+        
+        if (agents[i].bombs > 0 && dist <= BOMB_RANGE && !groups[target].bombed) {
+            printf("%d;THROW %d %d;MESSAGE Bombing G%d\n", 
+                  agents[i].id, groups[target].x, groups[target].y, target);
+            groups[target].bombed = true;
+        } else {
+            // Hedefe doğru ilerle
+            int mx, my;
+            move_to(&agents[i], groups[target].x, groups[target].y, &mx, &my);
+            
+            if (groups[target].bombed) {
+                printf("%d;MOVE %d %d;MESSAGE Moving to G%d (already bombed)\n", 
+                      agents[i].id, mx, my, target);
+            } else {
+                printf("%d;MOVE %d %d;MESSAGE Moving to G%d (dist:%d)\n", 
+                      agents[i].id, mx, my, target, dist);
+            }
         }
     }
 }
 
-void read_all_input() {
+// Tüm girdiyi oku
+void read_input() {
+    static bool first_turn = true;
+    
+    // İlk turdaysak oyun ayarlarını oku
+    if (first_turn) {
+        scanf("%d", &my_id);
+        
+        int agent_data_count;
+        scanf("%d", &agent_data_count);
+        for (int i = 0; i < agent_data_count; i++) {
+            int id, player, cooldown, range, power, bombs;
+            scanf("%d%d%d%d%d%d", &id, &player, &cooldown, &range, &power, &bombs);
+        }
+        
+        scanf("%d%d", &width, &height);
+        fprintf(stderr, "Map dimensions: %dx%d\n", width, height);
+        
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int tx, ty, t;
+                scanf("%d%d%d", &tx, &ty, &t);
+                if (tx >= 0 && tx < width && ty >= 0 && ty < height) {
+                    grid[tx][ty] = t;
+                }
+            }
+        }
+        
+        first_turn = false;
+    }
+    
+    // Her tur için ajan bilgilerini oku
     scanf("%d", &agent_count);
+    agent_count = agent_count < MAX_AGENTS ? agent_count : MAX_AGENTS;
+    
     for (int i = 0; i < agent_count; i++) {
         int id, x, y, cooldown, bombs, wetness;
         scanf("%d%d%d%d%d%d", &id, &x, &y, &cooldown, &bombs, &wetness);
         
-        int found = 0;
-        for (int j = 0; j < MAX_AGENTS; j++) {
-            if (agents[j].id == id) {
-                agents[j].x = x;
-                agents[j].y = y;
-                agents[j].splashBombs = bombs;
-                found = 1;
-                break;
-            }
+        // İlk defa bu ajanı görüyorsak, başlat
+        if (i == 0 || agents[i].id != id) {
+            agents[i].id = id;
+            agents[i].last_x = x;
+            agents[i].last_y = y;
+            agents[i].stuck_count = 0;
         }
         
-        if (!found) {
-            for (int j = 0; j < MAX_AGENTS; j++) {
-                if (agents[j].id == 0) {
-                    agents[j] = (Agent){id, (j < 2) ? my_id : 1 - my_id, x, y, bombs, 
-                                       false, -1, -1};
-                    break;
-                }
-            }
-        }
+        agents[i].x = x;
+        agents[i].y = y;
+        agents[i].bombs = bombs;
+        agents[i].is_mine = false;  // Varsayılan olarak düşman
     }
     
+    // Kendi ajanlarımızın sayısını oku
     scanf("%d", &my_agent_count);
+    my_agent_count = my_agent_count < agent_count ? my_agent_count : agent_count;
+    
+    // İlk my_agent_count ajanı bizim olarak işaretle
+    for (int i = 0; i < my_agent_count; i++) {
+        agents[i].is_mine = true;
+    }
 }
 
 int main() {
-    scanf("%d", &my_id);
-    int agent_data_count;
-    scanf("%d", &agent_data_count);
-    for (int i = 0; i < agent_data_count; i++) {
-        int id, player, cooldown, range, power, bombs;
-        scanf("%d%d%d%d%d%d", &id, &player, &cooldown, &range, &power, &bombs);
-    }
-    
-    scanf("%d%d", &width, &height);
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            int tx, ty, t;
-            scanf("%d%d%d", &tx, &ty, &t);
-            tile_type[tx][ty] = t;
-        }
-    }
-
     int turn = 0;
-    while (turn++ < 40) {
-        read_all_input();
-        
-        // Düşman gruplarını yalnızca bir kez başlangıçta tespit et
-        if (!groups_initialized) {
-            initialize_enemy_groups();
-        } else {
-            // Sadece mevcut grupların durumunu güncelle
-            update_enemy_groups();
-        }
-        
-        update_current_target();
-        assign_targets();
+    while (turn++ < 100) {
+        read_input();
+        execute_turn();
         fflush(stdout);
     }
-
     return 0;
 }
